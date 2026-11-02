@@ -37,6 +37,10 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 - Na aba Materiais, use **Copiar material** e **Colar material** para reutilizar cor, rugosidade, metalização e opacidade em outro objeto. A cópia de material dura apenas durante a sessão do projeto.
 - Essas alterações podem ser desfeitas e refeitas; os resultados são salvos no projeto.
 
+## Deformar caixas
+
+Selecione uma caixa original e use **Deformar caixa** para afunilar o topo ou incliná-lo em X ou Y local, mantendo a base no lugar. Os campos mostram prévia no modelo; cancelar preserva o original e aplicar cria uma malha independente, com desfazer/refazer. O deslocamento usa a unidade do projeto. A ferramenta funciona somente em caixas ainda não convertidas em malha; após aplicar, as ferramentas específicas de caixas deixam de estar disponíveis para aquele objeto.
+
 ## Organização avançada da cena
 
 Na lista da cena, **Filtros e ordenação** permite combinar busca e etiqueta com tipo e estado (visível, oculto, bloqueado ou desbloqueado), ordenar por nome ou tipo e limpar os filtros. A ordenação é somente visual: não altera a ordem dos objetos na cena. O contador mostra quantos objetos correspondem aos filtros.
