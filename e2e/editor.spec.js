@@ -153,17 +153,24 @@ test('copies materials and resizes proportionally while preserving undo',async({
   await page.locator('#undo').click();await expect(page.locator('[data-prop="width"]')).toHaveValue('2');
 });
 
-test('bevels a box, persists geometry and supports undo',async({page})=>{
-  await gotoAndStart(page,'/bender-studio.html');await page.locator('#bevel-open').click();await expect(page.locator('#bevel-dialog')).toBeVisible();await page.locator('#bevel-size').fill('0.2');await page.locator('#bevel-form button[type="submit"]').click();
-  let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].type).toBe('mesh');expect(saved.objects[0].geometry.length).toBeGreaterThan(108);
-  await page.reload();saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].type).toBe('mesh');
+test('previews selected-edge bevel in place, cancels and applies with undo',async({page})=>{
+  await gotoAndStart(page,'/bender-studio.html');await page.locator('#bevel-open').click();await expect(page.locator('#bevel-inline')).toBeVisible();await page.locator('#bevel-edge-select').selectOption('0');
+  const before=await page.evaluate(()=>localStorage.getItem('bender-scene-v1'));const first=await page.locator('#canvas canvas').screenshot();
+  await page.locator('#bevel-size').fill('0.6');await expect(page.locator('#bevel-size')).toBeFocused();await page.locator('#bevel-segments').selectOption('8');const second=await page.locator('#canvas canvas').screenshot();expect(second.equals(first)).toBe(false);expect(await page.evaluate(()=>localStorage.getItem('bender-scene-v1'))).toBe(before);
+  await page.locator('#bevel-cancel').click();let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].type).toBe('box');
+  await page.locator('#bevel-open').click();await page.locator('#bevel-edge-select').selectOption('0');await page.locator('#bevel-size').fill('0.2');await page.locator('#bevel-apply').click();saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].type).toBe('mesh');
+  await page.locator('#undo').click();saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].type).toBe('box');await page.locator('#redo').click();await page.reload();saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].type).toBe('mesh');
 });
 
 test('draws a rectangle on a face to create a through cut and undo',async({page})=>{
   await gotoAndStart(page,'/bender-studio.html');await page.locator('[data-view="top"]').click();await page.locator('[data-tool="cut-face"]').click();
   const box=await page.locator('#canvas canvas').boundingBox();const x=box.x+box.width/2,y=box.y+box.height/2;
   await page.mouse.move(x-15,y-15);await page.mouse.down();await page.mouse.move(x+15,y+15,{steps:8});await page.mouse.up();
-  await expect(page.locator('#cut-dialog')).toBeVisible();await page.locator('#cut-mode').selectOption('through');await page.locator('#cut-form button[type="submit"]').click();await expect(page.locator('#cut-dialog')).toBeHidden();
+  await expect(page.locator('#cut-inline')).toBeVisible();const before=await page.evaluate(()=>localStorage.getItem('bender-scene-v1'));await page.locator('#cut-depth').fill('0.8');await expect(page.locator('#cut-depth')).toBeFocused();expect(await page.evaluate(()=>localStorage.getItem('bender-scene-v1'))).toBe(before);await page.locator('#cut-mode').selectOption('through');await page.locator('#cut-apply').click();await expect(page.locator('#cut-inline')).toBeHidden();
   let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].type).toBe('mesh');expect(saved.objects[0].geometry.length).toBeGreaterThan(108);
   await page.locator('#undo').click();saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].type).toBe('box');await page.locator('#redo').click();await page.reload();saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].type).toBe('mesh');
+});
+
+test('object numeric parameters update without closing or losing focus',async({page})=>{
+  await gotoAndStart(page,'/bender-studio.html');const width=page.locator('[data-prop="width"]');await width.fill('3');await expect(width).toBeFocused();let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].scale[0]).toBe(3);await width.fill('4');await expect(width).toBeFocused();await width.press('Tab');await page.locator('#undo').click();saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].scale[0]).toBe(2);
 });
