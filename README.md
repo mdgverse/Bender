@@ -37,6 +37,12 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 - Na aba Materiais, use **Copiar material** e **Colar material** para reutilizar cor, rugosidade, metalização e opacidade em outro objeto. A cópia de material dura apenas durante a sessão do projeto.
 - Essas alterações podem ser desfeitas e refeitas; os resultados são salvos no projeto.
 
+## Organização avançada da cena
+
+Na lista da cena, **Filtros e ordenação** permite combinar busca e etiqueta com tipo e estado (visível, oculto, bloqueado ou desbloqueado), ordenar por nome ou tipo e limpar os filtros. A ordenação é somente visual: não altera a ordem dos objetos na cena. O contador mostra quantos objetos correspondem aos filtros.
+
+Em **Ações dos resultados filtrados**, é possível mostrar, ocultar, bloquear, desbloquear, aplicar ou remover uma etiqueta e excluir os resultados; essas ações são desfeitas pelo histórico. A exclusão pede confirmação e inclui objetos ocultos e bloqueados que correspondam aos filtros. Enquadrar visíveis ajusta a câmera para os resultados visíveis sem mudar a cena. Confira a lista e o contador antes de executar ações em lote.
+
 ## Etiquetas de objetos
 
 Atribua uma **Etiqueta** nas propriedades de um objeto, por exemplo “Paredes” ou “Móveis”. O seletor na lista da cena filtra objetos por etiqueta ou mostra apenas os sem etiqueta; a busca por nome funciona junto com o filtro. O filtro afeta somente a lista, não oculta objetos no viewport nem altera o que é exportado.

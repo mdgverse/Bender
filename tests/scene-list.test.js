@@ -1,0 +1,5 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {sceneItems} from '../src/scene-list.js';
+const o=(name,type,tag,visible=true,locked=false)=>({userData:{name,type,tag,locked},visible});
+const objects=[o('Cubo 10','box','Casa'),o('Esfera','sphere','Casa',false,true),o('Cubo 2','box','',true,true)];
+test('combines text, tag, type and state filters',()=>{assert.deepEqual(sceneItems(objects,{query:'CUBO',type:'box',state:'locked'}).map(x=>x.index),[2]);assert.deepEqual(sceneItems(objects,{tag:'tag:Casa',state:'hidden'}).map(x=>x.index),[1]);assert.deepEqual(sceneItems(objects,{tag:'none',state:'visible'}).map(x=>x.index),[2]);assert.equal(sceneItems(objects,{state:'unlocked'}).length,1)});
+test('sorts naturally and never changes scene order or indices',()=>{assert.deepEqual(sceneItems(objects,{sort:'name'}).map(x=>x.index),[2,0,1]);assert.deepEqual(sceneItems(objects,{sort:'name-desc'}).map(x=>x.index),[1,0,2]);assert.deepEqual(sceneItems(objects,{sort:'type'}).map(x=>x.index),[0,2,1]);assert.equal(objects[0].userData.name,'Cubo 10')});
