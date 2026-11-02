@@ -23,6 +23,8 @@ O nome do projeto pode ser editado na barra superior e será usado nos arquivos 
 
 A cena é salva automaticamente no armazenamento local do navegador; limpar esses dados pode apagá-la. Use Arquivo → Baixar projeto para fazer backup em JSON, e Arquivo → Abrir projeto para restaurá-lo. O histórico não é preservado ao recarregar. Projetos da versão anterior continuam compatíveis.
 
+O menu Arquivo permite importar malhas triangulares STL ou OBJ (até 2 MB por arquivo, 10.000 vértices triangulares por malha e 60.000 coordenadas importadas por cena). A geometria fica no projeto e pode ser transformada, duplicada e exportada; materiais, texturas, normais originais e arquivos MTL não são importados. As coordenadas usam Y vertical, como nos arquivos exportados pelo Bender. Não há edição individual de faces nessas malhas importadas.
+
 É possível exportar os objetos **visíveis** em GLB, OBJ ou STL, ou salvar uma captura PNG do viewport. GLB inclui cor, rugosidade, metalização e opacidade; OBJ e STL exportam geometria, sem cores ou materiais. As preferências de visualização, como projeção, grade e aramado, não são salvas no projeto.
 
 ## Controles desktop

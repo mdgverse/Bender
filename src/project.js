@@ -1,3 +1,4 @@
+import {isValidMeshPositions, MAX_SCENE_MESH_VALUES} from './mesh-import.js';
 /** Validate the portable scene format before replacing the current scene. */
 export function isValidProject(data) {
   if (!data || !Array.isArray(data.objects) || !Number.isSafeInteger(data.serial) || data.serial < 0 || data.objects.length > 1000) return false;
@@ -8,9 +9,11 @@ export function isValidProject(data) {
   if (data.environment?.shadows !== undefined && typeof data.environment.shadows !== 'boolean') return false;
   if (data.environment?.showLight !== undefined && typeof data.environment.showLight !== 'boolean') return false;
   if (!Number.isInteger(data.selected) || data.selected < -1 || data.selected >= data.objects.length) return false;
+  let totalMeshValues=0;
   return data.objects.every(o => {
     if (!o || typeof o !== 'object' || typeof o.name !== 'string' || o.name.length > 100) return false;
-    if (o.type !== undefined && !['box', 'sphere', 'cylinder', 'cone', 'pyramid', 'torus', 'tetrahedron', 'icosahedron', 'octahedron', 'dodecahedron', 'capsule'].includes(o.type)) return false;
+    if (o.type !== undefined && !['box', 'sphere', 'cylinder', 'cone', 'pyramid', 'torus', 'tetrahedron', 'icosahedron', 'octahedron', 'dodecahedron', 'capsule', 'mesh'].includes(o.type)) return false;
+    if(o.type==='mesh'){if(!isValidMeshPositions(o.geometry))return false;totalMeshValues+=o.geometry.length;if(totalMeshValues>MAX_SCENE_MESH_VALUES)return false;}else if(o.geometry !== undefined)return false;
     if (o.color !== undefined && (typeof o.color !== 'string' || !/^[0-9a-f]{6}$/i.test(o.color))) return false;
     if (['rotation', 'rotationX', 'rotationZ'].some(key => o[key] !== undefined && !Number.isFinite(o[key]))) return false;
     if (['roughness', 'metalness', 'opacity'].some(key => o[key] !== undefined && (!Number.isFinite(o[key]) || o[key] < 0 || o[key] > 1))) return false;

@@ -95,3 +95,19 @@ test('shadows change the viewport and survive reload', async ({page}) => {
   await page.waitForTimeout(500);const withShadow=await page.locator('canvas').screenshot();expect(without.equals(withShadow)).toBe(false);
   await page.reload();await page.locator('#environment-open').click();await expect(page.locator('#environment-shadows')).toBeChecked();
 });
+
+test('imports OBJ geometry, duplicates and restores it through history and reload', async ({page}) => {
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/bender-studio.html');await page.locator('#file-menu').click();
+  const chooser=page.waitForEvent('filechooser');await page.locator('#import-obj').click();await (await chooser).setFiles({name:'triangulo.obj',mimeType:'text/plain',buffer:Buffer.from('o tri\nv 0 0 0\nv 2 0 0\nv 0 2 0\nf 1 2 3\n')});
+  await expect(page.locator('#count')).toHaveText('2');await expect(page.locator('#object-name')).toHaveValue('triangulo');
+  let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects[1].type).toBe('mesh');expect(data.objects[1].geometry).toHaveLength(9);
+  await page.locator('#duplicate').click();await expect(page.locator('#count')).toHaveText('3');await page.locator('#undo').click();await expect(page.locator('#count')).toHaveText('2');
+  await page.reload();await expect(page.locator('#count')).toHaveText('2');await expect(page.locator('#object-name')).toHaveValue('triangulo');expect(errors).toEqual([]);
+});
+
+test('imports STL and rejects malformed files without changing the scene',async({page})=>{
+  await page.goto('/bender-studio.html');await page.locator('#file-menu').click();const chooser=page.waitForEvent('filechooser');await page.locator('#import-stl').click();
+  const stl='solid one\n facet normal 0 0 1\n outer loop\n vertex 0 0 0\n vertex 2 0 0\n vertex 0 2 0\n endloop\n endfacet\nendsolid one';
+  await (await chooser).setFiles({name:'face.stl',mimeType:'model/stl',buffer:Buffer.from(stl)});await expect(page.locator('#count')).toHaveText('2');await page.locator('#undo').click();await expect(page.locator('#count')).toHaveText('1');
+  page.once('dialog',d=>d.accept());await page.locator('#file-menu').click();const chooser2=page.waitForEvent('filechooser');await page.locator('#import-obj').click();await (await chooser2).setFiles({name:'vazio.obj',mimeType:'text/plain',buffer:Buffer.from('v 0 0 0\n')});await expect(page.locator('#count')).toHaveText('1');
+});
