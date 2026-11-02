@@ -70,9 +70,10 @@ test('scene environment and quick transforms persist and undo', async ({page}) =
 test('point light visibly illuminates the model and its settings persist', async ({page}) => {
   await page.goto('/bender-studio.html');await page.locator('#scene-light').click();await expect(page.locator('#light-properties')).toBeVisible();
   await page.locator('#light-properties').click();await page.locator('#environment-ambient').fill('0');await page.locator('#environment-direct').fill('0');await page.locator('#light-marker-visible').uncheck();await page.locator('#environment-form button[type="submit"]').click();
-  await page.waitForTimeout(300);const dark=await page.locator('canvas').screenshot();
-  await page.locator('#environment-open').click();await page.locator('#environment-direct').fill('5');await page.locator('#light-x').fill('2');await page.locator('#light-y').fill('1');await page.locator('#light-z').fill('3');await page.locator('#environment-light-color').fill('#ffcc99');await page.locator('#environment-form button[type="submit"]').click();
+  await page.locator('[data-index="0"]').click();await page.waitForTimeout(300);const dark=await page.locator('canvas').screenshot();
+  await page.locator('#environment-open').click();await page.locator('#environment-direct').fill('5');await page.locator('#environment-form button[type="submit"]').click();
   await page.waitForTimeout(300);const lit=await page.locator('canvas').screenshot();expect(dark.equals(lit)).toBe(false);
+  await page.locator('#environment-open').click();await page.locator('#light-x').fill('2');await page.locator('#light-y').fill('1');await page.locator('#light-z').fill('3');await page.locator('#environment-light-color').fill('#ffcc99');await page.locator('#environment-form button[type="submit"]').click();
   let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.environment).toMatchObject({ambient:0,direct:5,lightPosition:[2,3,1],lightColor:'ffcc99',showLight:false});
   await page.reload();await page.locator('#environment-open').click();await expect(page.locator('#light-z')).toHaveValue('3');await expect(page.locator('#environment-direct')).toHaveValue('5');await expect(page.locator('#light-marker-visible')).not.toBeChecked();
 });
