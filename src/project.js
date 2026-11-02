@@ -1,3 +1,4 @@
+import {isValidCompositor} from './compositor.js';
 import {isValidPrimitiveParams} from './geometry.js';
 import {isValidDeformRecipe} from './editable-deform.js';
 import {isValidMeshBevel} from './editable-mesh-bevel.js';
@@ -7,6 +8,7 @@ import {isUnit} from './units.js';
 import {isValidMeshPositions, MAX_SCENE_MESH_VALUES} from './mesh-import.js';
 /** Validate the portable scene format before replacing the current scene. */
 export function isValidProject(data) {
+  if (data?.compositor !== undefined && !isValidCompositor(data.compositor)) return false;
   if (!data || !Array.isArray(data.objects) || !Number.isSafeInteger(data.serial) || data.serial < 0 || data.objects.length > 1000) return false;
   if (data.units !== undefined && !isUnit(data.units)) return false;
   if (data.title !== undefined && (typeof data.title !== 'string' || !data.title.trim() || data.title.length > 80)) return false;
