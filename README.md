@@ -23,6 +23,13 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 - Para fazer um entalhe ou abertura, use **Desenhar corte na face** no painel (ou o botão de corte na barra de ferramentas), clique e arraste um retângulo sobre uma face plana. Solte e escolha **Entalhe com profundidade** ou **Corte atravessando** no painel lateral, visualizando o resultado antes de aplicar. Girar a vista antes de desenhar pode facilitar a seleção da face. O retângulo pode ultrapassar uma borda para criar um recorte aberto.
 - Cortes funcionam em caixas e malhas fechadas com faces planas alinhadas aos eixos locais. O chanfro e o corte convertem o objeto em malha triangulada; as propriedades, materiais, desfazer/refazer, salvamento e exportação continuam disponíveis. A ferramenta antiga de empurrar/puxar continua exclusiva de caixas não convertidas. Esta ainda não é uma edição livre de faces como a do SketchUp: não há desenho arbitrário, chanfro em várias arestas de uma só vez ou em qualquer geometria. As operações booleanas são experimentais e podem falhar em malhas abertas, complexas ou degeneradas; faça backups.
 
+## Operações sólidas, espelhamento e medidas
+
+- **Operações sólidas…** combina o objeto selecionado com outro objeto visível: subtrair, unir ou manter apenas a interseção. Escolha o segundo objeto e veja uma prévia antes de aplicar. Por padrão o segundo objeto é consumido; marque **Manter outro objeto** para preservá-lo. Desfazer restaura ambos.
+- Em **Ações rápidas**, espelhe a geometria no eixo local X, Y ou Z. O objeto convertido continua editável como malha e a operação pode ser desfeita.
+- Em **Medidas da geometria**, consulte a caixa envolvente global, a área superficial, a quantidade de triângulos e, para malhas verificadas como fechadas e orientadas, o volume. A área e o volume usam a unidade do projeto ao quadrado e ao cubo; geometrias abertas ou com topologia não verificada não recebem cálculo confiável de volume.
+- As operações sólidas são experimentais: exigem sólidos fechados e podem falhar em superfícies abertas, interseções degeneradas ou malhas complexas. As operações geram malhas trianguladas, preservam o material do objeto selecionado, mas não preservam materiais ou texturas do segundo objeto. Faça backups dos projetos importantes.
+
 ## Posicionamento e materiais
 
 - Selecione um objeto e use **Alinhar a outro…** no painel de modelagem. Escolha uma referência, eixo e alinhamento de centros ou bordas; também é possível colocar o objeto antes ou depois da referência com um espaço definido na unidade do projeto. O cálculo usa a caixa envolvente no espaço global, inclusive para objetos girados, e não faz contato entre superfícies irregulares.

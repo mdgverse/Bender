@@ -182,3 +182,16 @@ test('bevel can be applied to a solid after a face cut',async({page})=>{
   await page.locator('#bevel-open').click();await expect(page.locator('#bevel-inline')).toBeVisible();expect(await page.locator('#bevel-edge-select option').count()).toBeGreaterThan(1);await page.locator('#bevel-edge-select').selectOption({index:1});await page.locator('#bevel-size').fill('0.1');await expect(page.locator('#bevel-apply')).toBeEnabled();await page.locator('#bevel-apply').click();
   let result=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(result.objects[0].geometry).not.toEqual(cut.objects[0].geometry);await page.locator('#undo').click();result=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(result.objects[0].geometry).toEqual(cut.objects[0].geometry);await page.locator('#redo').click();await page.reload();result=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(result.objects[0].geometry).not.toEqual(cut.objects[0].geometry);
 });
+
+test('boolean preview, subtraction, undo, redo and reload keep projects safe',async({page})=>{
+  await gotoAndStart(page,'/bender-studio.html');await page.locator('#duplicate').click();const before=await page.evaluate(()=>localStorage.getItem('bender-scene-v1'));
+  await page.locator('#boolean-open').click();await expect(page.locator('#boolean-inline')).toBeVisible();await page.locator('#boolean-reference').selectOption('0');await expect(page.locator('#boolean-apply')).toBeEnabled();expect(await page.evaluate(()=>localStorage.getItem('bender-scene-v1'))).toBe(before);
+  await page.locator('#boolean-cancel').click();expect(await page.evaluate(()=>localStorage.getItem('bender-scene-v1'))).toBe(before);
+  await page.locator('#boolean-open').click();await page.locator('#boolean-reference').selectOption('0');await page.locator('#boolean-apply').click();await expect(page.locator('#count')).toHaveText('1');let state=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(state.objects[0].type).toBe('mesh');
+  await page.locator('#undo').click();await expect(page.locator('#count')).toHaveText('2');await page.locator('#redo').click();await expect(page.locator('#count')).toHaveText('1');await page.reload();state=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(state.objects).toHaveLength(1);expect(state.objects[0].type).toBe('mesh');
+});
+
+test('shows surface and volume and mirrors objects with undo',async({page})=>{
+  await gotoAndStart(page,'/bender-studio.html');await page.locator('.object-metrics summary').click();await expect(page.locator('#object-metrics-result')).toContainText('Área: 24 m²');await expect(page.locator('#object-metrics-result')).toContainText('Volume: 8 m³');
+  await page.locator('.advanced-transforms summary').click();await page.locator('[data-mirror="x"]').click();let state=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(state.objects[0].type).toBe('mesh');await page.locator('#undo').click();state=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(state.objects[0].type).toBe('box');
+});
