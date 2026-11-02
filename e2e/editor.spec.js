@@ -77,3 +77,21 @@ test('point light visibly illuminates the model and its settings persist', async
   let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.environment).toMatchObject({ambient:0,direct:5,lightPosition:[2,3,1],lightColor:'ffcc99',showLight:false});
   await page.reload();await page.locator('#environment-open').click();await expect(page.locator('#light-z')).toHaveValue('3');await expect(page.locator('#environment-direct')).toHaveValue('5');await expect(page.locator('#light-marker-visible')).not.toBeChecked();
 });
+
+test('measure two points on the ground plane without modifying the project', async ({page}) => {
+  await page.goto('/bender-studio.html');await page.locator('[data-view="top"]').click();await page.keyboard.press('m');
+  await expect(page.locator('#measure-readout')).toBeVisible();const rect=await page.locator('canvas').boundingBox();
+  await page.mouse.click(rect.x+rect.width*.35,rect.y+rect.height*.35);await page.mouse.move(rect.x+rect.width*.65,rect.y+rect.height*.35);
+  await expect(page.locator('#measure-values')).toContainText('Distância');const preview=await page.locator('#measure-values').textContent();expect(preview).not.toContain('Distância 0.00');
+  await page.mouse.click(rect.x+rect.width*.65,rect.y+rect.height*.35);await expect(page.locator('#measure-values')).toHaveText(preview);
+  expect(await page.evaluate(()=>localStorage.getItem('bender-scene-v1'))).toBeNull();await page.locator('#measure-clear').click();await expect(page.locator('#measure-values')).toContainText('primeiro ponto');
+  await page.keyboard.press('v');await expect(page.locator('#measure-readout')).toBeHidden();
+});
+
+test('shadows change the viewport and survive reload', async ({page}) => {
+  await page.goto('/bender-studio.html');await page.locator('#environment-open').click();await page.locator('#environment-shadows').uncheck();await page.locator('#environment-direct').fill('3');await page.locator('#light-marker-visible').uncheck();await page.locator('#environment-form button[type="submit"]').click();
+  await page.waitForTimeout(500);const without=await page.locator('canvas').screenshot();
+  await page.locator('#environment-open').click();await page.locator('#environment-shadows').check();await page.locator('#environment-form button[type="submit"]').click();
+  await page.waitForTimeout(500);const withShadow=await page.locator('canvas').screenshot();expect(without.equals(withShadow)).toBe(false);
+  await page.reload();await page.locator('#environment-open').click();await expect(page.locator('#environment-shadows')).toBeChecked();
+});

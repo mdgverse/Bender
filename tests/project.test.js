@@ -41,3 +41,6 @@ test('validates light position, color and marker visibility',()=>{
   const data=valid();data.environment={background:'242628',ambient:0.6,direct:2,lightPosition:[1,2,3],lightColor:'ffddee',showLight:true};assert.equal(isValidProject(data),true);
   data.environment.lightPosition=[Infinity,2,3];assert.equal(isValidProject(data),false);data.environment.lightPosition=[1,2,3];data.environment.lightColor='bad';assert.equal(isValidProject(data),false);data.environment.lightColor='ffffff';data.environment.showLight=1;assert.equal(isValidProject(data),false);
 });
+test('shadow setting is optional for older projects and accepts only booleans',()=>{
+  const p=valid();p.environment={background:'242628',ambient:.6,direct:2};assert.equal(isValidProject(p),true);p.environment.shadows=true;assert.equal(isValidProject(p),true);p.environment.shadows='yes';assert.equal(isValidProject(p),false);
+});
