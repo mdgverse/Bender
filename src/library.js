@@ -9,6 +9,7 @@ export function loadProject(storage,id){if(!validId(id))return null;try{const pr
 export function saveProject(storage,id,project,thumbnail=''){
   if(!validId(id)||!isValidProject(project))throw new Error('Projeto inválido.');
   const index=readIndex(storage),old=index.find(p=>p.id===id);
+  if(!old&&index.length>=200)throw new Error('A biblioteca suporta até 200 projetos.');
   const entry={id,title:project.title||'Projeto sem título',units:project.units||'m',updatedAt:Date.now(),thumbnail:thumbnail||old?.thumbnail||''};
   // Write the project before its index entry; a quota failure never erases an older copy.
   storage.setItem(keyFor(id),JSON.stringify(project));
@@ -34,4 +35,20 @@ export function importLibrary(storage,backup,newId){
     for(let i=0;i<items.length;i++){let id;for(let attempts=0;attempts<10;attempts++){id=newId();if(validId(id)&&!used.has(id)&&!storage.getItem(keyFor(id)))break;id=null}if(!id)throw new Error('Não foi possível gerar identificadores únicos.');used.add(id);storage.setItem(keyFor(id),JSON.stringify(items[i].project));created.push({id,title:items[i].project.title||'Projeto sem título',units:items[i].project.units||'m',updatedAt:Date.now()-i,thumbnail:items[i].thumbnail})}
     storage.setItem(INDEX_KEY,JSON.stringify([...created,...old]));return created.length;
   }catch(error){for(const item of created)storage.removeItem(keyFor(item.id));throw error}
+}
+
+/** Rename a project without losing its geometry or changing its identifier. */
+export function renameLibraryProject(storage,id,title){
+  if(!validId(id)||typeof title!=='string'||!title.trim()||title.trim().length>80)throw new Error('Informe um nome de até 80 caracteres.');
+  const index=readIndex(storage),old=index.find(p=>p.id===id),project=loadProject(storage,id);if(!old||!project)throw new Error('Projeto não encontrado ou danificado.');
+  title=title.trim();const rawIndex=storage.getItem(INDEX_KEY),entry={...old,title,updatedAt:Date.now()};
+  storage.setItem(INDEX_KEY,JSON.stringify([entry,...index.filter(p=>p.id!==id)]));
+  try{storage.setItem(keyFor(id),JSON.stringify({...project,title}))}catch(err){if(rawIndex===null)storage.removeItem(INDEX_KEY);else storage.setItem(INDEX_KEY,rawIndex);throw err}
+}
+/** Duplicate as a new, independently editable project. */
+export function duplicateLibraryProject(storage,id,newId){
+  const entry=readIndex(storage).find(p=>p.id===id),project=loadProject(storage,id);if(!entry||!project)throw new Error('Projeto não encontrado ou danificado.');
+  const suffix=' cópia',title=(project.title||'Projeto sem título').slice(0,80-suffix.length)+suffix;
+  const thumb=typeof entry.thumbnail==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(entry.thumbnail)&&entry.thumbnail.length<200000?entry.thumbnail:'';
+  return importLibrary(storage,{format:'bender-library',version:1,projects:[{project:{...project,title},thumbnail:thumb}]},newId);
 }

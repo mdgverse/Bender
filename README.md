@@ -37,6 +37,12 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 - Na aba Materiais, use **Copiar material** e **Colar material** para reutilizar cor, rugosidade, metalização e opacidade em outro objeto. A cópia de material dura apenas durante a sessão do projeto.
 - Essas alterações podem ser desfeitas e refeitas; os resultados são salvos no projeto.
 
+## Organizar projetos e cenas
+
+- Na biblioteca inicial, busque projetos pelo nome e ordene por nome, mais recentes ou mais antigos. Em cada cartão, use os botões para renomear, duplicar, baixar um JSON individual ou excluir o projeto. Duplicar cria um projeto independente, com sua própria cópia da cena e miniatura.
+- A biblioteca aceita até 200 projetos; quando está cheia, o aplicativo recusa novos projetos em vez de remover um projeto antigo da lista.
+- Na lista de objetos, **Ações para todos os objetos** permite ocultar, inverter a visibilidade, bloquear ou desbloquear a cena inteira. As ações incluem objetos ocultos e filtrados pela busca, e podem ser desfeitas.
+
 ## Divisão, alinhamento e exportação
 
 - **Dividir caixa…** cria peças iguais ao longo de um eixo local da caixa; ajuste quantidade e espaço entre elas com prévia na cena. A rotação e o material são preservados, e a divisão inteira pode ser desfeita. Por enquanto, funciona em caixas que ainda não foram convertidas em malha.
