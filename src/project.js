@@ -26,6 +26,7 @@ export function isValidProject(data) {
     if (o.color !== undefined && (typeof o.color !== 'string' || !/^[0-9a-f]{6}$/i.test(o.color))) return false;
     if (['rotation', 'rotationX', 'rotationZ'].some(key => o[key] !== undefined && !Number.isFinite(o[key]))) return false;
     if (['roughness', 'metalness', 'opacity'].some(key => o[key] !== undefined && (!Number.isFinite(o[key]) || o[key] < 0 || o[key] > 1))) return false;
+    if (o.compositor !== undefined && !isValidCompositor(o.compositor)) return false;
     if (o.tag !== undefined && !isValidTag(o.tag)) return false;
     if (o.primitiveParams !== undefined && !isValidPrimitiveParams(o.type,o.primitiveParams)) return false;
     if (o.deform !== undefined && (o.type!=='mesh' || o.meshBevel!==undefined || o.cut!==undefined || o.bevel!==undefined || o.stairs!==undefined || !isValidDeformRecipe(o.deform))) return false;

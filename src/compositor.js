@@ -34,6 +34,6 @@ export function compositePixels(pixels,recipe){
   // Both upstream operations are affine in linear RGB. Fold the ordered chain
   // into one multiplier and offset, without clipping between operations.
   let multiplier=1,offset=0;for(const node of active){if(node.type==='exposure'){const scale=2**node.exposure;multiplier*=scale;offset*=scale}else{const black=brightnessContrastPixel([0,0,0,1],node.brightness,node.contrast)[0],white=brightnessContrastPixel([1,1,1,1],node.brightness,node.contrast)[0],scale=white-black;multiplier*=scale;offset=offset*scale+black}}
-  for(let i=0;i<result.length;i+=4)for(let c=0;c<3;c++)result[i+c]=Math.max(0,Math.min(255,toSrgb(Math.max(0,toLinear(result[i+c]/255)*multiplier+offset))*255));
+  for(let i=0;i<result.length;i+=4)if(result[i+3]!==0)for(let c=0;c<3;c++)result[i+c]=Math.max(0,Math.min(255,toSrgb(Math.max(0,toLinear(result[i+c]/255)*multiplier+offset))*255));
   return result;
 }
