@@ -39,7 +39,7 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 
 ## Escada reta
 
-Em **Adicionar → Escada reta**, ajuste largura, profundidade, altura total e número de degraus com prévia em tempo real. A escada é uma malha sólida no centro da cena, apoiada no chão. A ferramenta usa a unidade do projeto e permite cancelar antes de criar; a criação pode ser desfeita. A malha resultante pode ser transformada, receber material, ser salva e exportada, mas os parâmetros da escada não permanecem editáveis depois da criação.
+Em **Adicionar → Escada reta**, ajuste largura, profundidade, altura total e número de degraus com prévia em tempo real. A escada é uma malha sólida no centro da cena, apoiada no chão. A ferramenta usa a unidade do projeto e permite cancelar antes de criar; a criação pode ser desfeita. O número de degraus continua editável diretamente nas propriedades mesmo após salvar e reabrir; largura, profundidade e altura podem ser ajustadas em Dimensões. O histórico permite desfazer essas alterações, e cópias preservam os parâmetros. Escadas criadas antes deste recurso continuam sendo malhas comuns. Operações que substituem a geometria, como chanfro e corte, ainda são destrutivas: ao aplicá-las à escada, há um aviso e os degraus deixam de ser editáveis, mas é possível desfazer.
 
 ## Deformar caixas
 

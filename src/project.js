@@ -21,6 +21,7 @@ export function isValidProject(data) {
     if (['rotation', 'rotationX', 'rotationZ'].some(key => o[key] !== undefined && !Number.isFinite(o[key]))) return false;
     if (['roughness', 'metalness', 'opacity'].some(key => o[key] !== undefined && (!Number.isFinite(o[key]) || o[key] < 0 || o[key] > 1))) return false;
     if (o.tag !== undefined && !isValidTag(o.tag)) return false;
+    if (o.stairs !== undefined && (o.type!=='mesh' || !o.stairs || typeof o.stairs!=='object' || !Number.isInteger(o.stairs.steps) || o.stairs.steps<1 || o.stairs.steps>100)) return false;
     if (o.locked !== undefined && typeof o.locked !== 'boolean') return false;
     if (o.visible !== undefined && typeof o.visible !== 'boolean') return false;
     if (!Array.isArray(o.position) || !Array.isArray(o.scale) || o.position.length !== 3 || o.scale.length !== 3) return false;
