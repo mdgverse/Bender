@@ -1,21 +1,41 @@
 # Bender Studio
 
-Protótipo web de modelagem 3D, publicado em [Bender Studio](https://mdgverse.github.io/Bender/bender-studio.html).
+Protótipo web de modelagem 3D com foco em desktop, publicado em [Bender Studio](https://mdgverse.github.io/Bender/bender-studio.html).
 
-## Recursos
+## Modelagem e cena
 
-- Seleção, desenho de retângulos no plano, extrusão e movimentação no plano; criação de cubos, esferas e cilindros pelo menu Adicionar.
-- Duplicação, exclusão, nome, cor, rotação vertical, posição e dimensões de objetos.
-- Encaixe opcional em incrementos de 0,5 unidade (ícone de ímã), desfazer e refazer.
-- Salvamento automático no navegador, download e abertura de projeto JSON, e exportação de geometria e cor em GLB pelo menu Arquivo.
+- Seleção, retângulos no plano, extrusão por altura e movimentação no plano; primitivas de cubo, esfera, cilindro, cone, pirâmide, toro, tetraedro e icosaedro.
+- Nome, posição, dimensões locais, rotação nos três eixos, cor, duplicação, exclusão e encaixe opcional de 0,5 unidade.
+- Apoiar no chão, centralizar no plano, zerar rotação, e isolar objeto. A lista permite buscar objetos, ocultar ou mostrar e restaurar a visibilidade de todos. Alterações da cena participam do histórico de desfazer/refazer.
+- Estatísticas de objetos e triângulos visíveis; grade e modo aramado opcionais.
+- Vista de frente, lado, topo, trás, esquerda e baixo; enquadrar selecionado ou todos os objetos visíveis.
 
-A cena fica no armazenamento local do navegador; limpar os dados do navegador pode apagá-la. Baixe o projeto para ter uma cópia. O histórico de desfazer não é preservado ao recarregar. A extrusão altera a altura do objeto inteiro, não faces individuais; as vistas são perspectivas, não ortográficas; materiais avançados e renderização ainda não estão disponíveis.
+A extrusão altera a altura do objeto inteiro, não faces individuais. As vistas são perspectivas, não ortográficas. Não há edição de vértices/faces, materiais avançados ou renderização final ainda. As dimensões são medidas no espaço local do objeto, antes da rotação.
 
-## Uso
+## Arquivos
 
-No computador, use o botão central ou direito do mouse para orbitar e a roda para aproximar. No celular, selecione a ferramenta **Orbitar** e arraste com um dedo; use dois dedos para zoom e panorâmica. O botão de painel na barra superior mostra os objetos e suas propriedades.
+A cena é salva automaticamente no armazenamento local do navegador; limpar esses dados pode apagá-la. Use Arquivo → Baixar projeto para fazer backup em JSON, e Arquivo → Abrir projeto para restaurá-lo. O histórico não é preservado ao recarregar. Projetos da versão anterior continuam compatíveis.
 
-Atalhos: V seleciona, G move, R desenha retângulos, E extruda, O orbita, F enquadra o objeto selecionado, Shift+A abre Adicionar, Shift+D duplica, Num 1/3/7 mudam a vista, Delete exclui, Ctrl/Cmd+Z desfaz e Ctrl/Cmd+Shift+Z refaz.
+É possível exportar os objetos **visíveis** em GLB, OBJ ou STL, ou salvar uma captura PNG do viewport. GLB inclui cor; OBJ e STL exportam geometria, sem cores ou materiais. As preferências de visualização, como grade e aramado, não são salvas no projeto.
+
+## Controles desktop
+
+Botão central ou direito orbita; Shift com um desses botões faz panorâmica; a roda controla o zoom. As ferramentas à esquerda também funcionam por clique e arraste.
+
+| Atalho | Ação |
+|---|---|
+| V / G / R / E / O | Selecionar / mover / retângulo / extrudar / orbitar |
+| Shift+A / Shift+D | Adicionar / duplicar |
+| F / Home | Enquadrar selecionado / todos os visíveis |
+| H / Shift+H | Ocultar selecionado / mostrar todos |
+| Num 1 / 3 / 7 | Vistas frontal / lateral / superior |
+| Ctrl+Num 1 / 3 / 7 | Vistas traseira / esquerda / inferior |
+| Delete / Backspace | Excluir selecionado |
+| Ctrl/Cmd+Z / Ctrl/Cmd+Shift+Z | Desfazer / refazer |
+| Ctrl/Cmd+S | Baixar projeto JSON |
+| Esc | Cancelar gesto ou voltar à seleção |
+
+No celular, selecione **Orbitar** e arraste com um dedo; use dois dedos para zoom e panorâmica. O botão de painel na barra superior mostra os objetos e propriedades.
 
 ## Desenvolvimento
 
@@ -26,4 +46,4 @@ npm test
 npm run build
 ```
 
-O build também gera `bender-studio.html`, o arquivo independente publicado no GitHub Pages. `rea/` contém uma cópia local separada da ferramenta REA para uso futuro.
+O build também gera `bender-studio.html`, o arquivo independente publicado no GitHub Pages. Os testes incluem integração de interface com renderizador simulado e testes de geometrias, exportadores OBJ/STL e validação de projetos; não substituem testes de WebGL em um navegador real. `rea/` contém uma cópia local separada da ferramenta REA para uso futuro.

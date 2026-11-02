@@ -18,3 +18,10 @@ test('accepts supported primitive types and rejects unknown ones', () => {
   for (const type of ['box', 'sphere', 'cylinder']) {const data=valid(); data.objects[0].type=type; assert.equal(isValidProject(data),true)}
   const data=valid();data.objects[0].type='unknown';assert.equal(isValidProject(data),false);
 });
+test('preserves compatibility with new primitive, visibility and rotations', () => {
+  for (const type of ['cone','pyramid','torus','tetrahedron','icosahedron']) {
+    const data=valid();Object.assign(data.objects[0],{type,visible:false,rotationX:1,rotationZ:-1});assert.equal(isValidProject(data),true);
+  }
+  const data=valid();data.objects[0].visible='false';assert.equal(isValidProject(data),false);
+  data.objects[0].visible=true;data.objects[0].rotationX=NaN;assert.equal(isValidProject(data),false);
+});
