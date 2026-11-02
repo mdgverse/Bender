@@ -1,3 +1,4 @@
+import {isValidCutRecipe} from './editable-cut.js';
 import {isValidTag} from './tags.js';
 import {isUnit} from './units.js';
 import {isValidMeshPositions, MAX_SCENE_MESH_VALUES} from './mesh-import.js';
@@ -21,6 +22,7 @@ export function isValidProject(data) {
     if (['rotation', 'rotationX', 'rotationZ'].some(key => o[key] !== undefined && !Number.isFinite(o[key]))) return false;
     if (['roughness', 'metalness', 'opacity'].some(key => o[key] !== undefined && (!Number.isFinite(o[key]) || o[key] < 0 || o[key] > 1))) return false;
     if (o.tag !== undefined && !isValidTag(o.tag)) return false;
+    if (o.cut !== undefined && (o.type!=='mesh' || o.bevel!==undefined || o.stairs!==undefined || !isValidCutRecipe(o.cut))) return false;
     if (o.bevel !== undefined && (o.type!=='mesh' || !o.bevel || typeof o.bevel!=='object' || !['x','y','z'].includes(o.bevel.axis) || !Array.isArray(o.bevel.signs) || o.bevel.signs.length!==2 || !o.bevel.signs.every(n=>n===1||n===-1) || !Number.isFinite(o.bevel.amount) || o.bevel.amount<=0 || o.bevel.amount>100000 || !Number.isInteger(o.bevel.segments) || o.bevel.segments<1 || o.bevel.segments>12 || o.stairs!==undefined)) return false;
     if (o.stairs !== undefined && (o.type!=='mesh' || !o.stairs || typeof o.stairs!=='object' || !Number.isInteger(o.stairs.steps) || o.stairs.steps<1 || o.stairs.steps>100)) return false;
     if (o.locked !== undefined && typeof o.locked !== 'boolean') return false;

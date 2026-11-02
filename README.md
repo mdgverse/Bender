@@ -37,11 +37,17 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 - Na aba Materiais, use **Copiar material** e **Colar material** para reutilizar cor, rugosidade, metalização e opacidade em outro objeto. A cópia de material dura apenas durante a sessão do projeto.
 - Essas alterações podem ser desfeitas e refeitas; os resultados são salvos no projeto.
 
+## Corte editável de caixa
+
+O primeiro corte retangular numa caixa original guarda seus parâmetros no projeto. Nas propriedades, é possível alterar em tempo real a profundidade do entalhe ou alternar entre entalhe e corte atravessando; o retângulo e a face escolhidos são preservados. **Remover corte** restaura a caixa original, respeitando a posição, rotação e escala atuais. As alterações podem ser desfeitas e os parâmetros acompanham cópias e projetos salvos. Após escalar a peça, a profundidade exibida é a da geometria original, antes da escala.
+
+Por enquanto cortes em malhas e cortes posteriores não são editáveis. Operações que substituam a geometria, como um chanfro após o corte, pedem confirmação antes de descartar os parâmetros; desfazer recupera o corte editável. Cortes feitos antes desta atualização continuam como malhas comuns.
+
 ## Chanfro editável de caixa
 
 Ao aplicar um chanfro a uma aresta de uma caixa original, seus parâmetros ficam nas propriedades: aresta, largura e segmentos podem ser alterados depois, com atualização no modelo, inclusive após salvar e reabrir. **Remover chanfro** retorna à caixa original; desfazer/refazer e cópias também preservam a edição. A largura usa a unidade atual do projeto; alterações de escala podem exigir ajustar esse valor antes de modificar os parâmetros.
 
-Por enquanto somente o primeiro chanfro de uma caixa original é editável. Chanfros em malhas, cortes e operações sólidas continuam destrutivos. Uma operação posterior que substitua a geometria avisa que os parâmetros editáveis serão perdidos; a substituição pode ser desfeita durante a sessão. Projetos e chanfros antigos permanecem como malhas comuns.
+Por enquanto somente o primeiro chanfro de uma caixa original é editável. Chanfros em malhas e operações sólidas continuam destrutivos; o primeiro corte de uma caixa original é editável. Uma operação posterior que substitua a geometria avisa que os parâmetros editáveis serão perdidos; a substituição pode ser desfeita durante a sessão. Projetos e chanfros antigos permanecem como malhas comuns.
 
 ## Escada reta
 
