@@ -5,12 +5,12 @@ Protótipo web de modelagem 3D com foco em desktop, publicado em [Bender Studio]
 ## Modelagem e cena
 
 - Seleção, retângulos no plano, extrusão por altura e movimentação no plano; primitivas de cubo, esfera, cilindro, cone, pirâmide, toro, tetraedro e icosaedro.
-- Nome, posição, dimensões locais, rotação nos três eixos, cor, duplicação, exclusão e encaixe opcional de 0,5 unidade.
+- Gizmos de movimentação, rotação e escala; empurrar/puxar faces de caixas mantendo a face oposta fixa. Nome, posição, dimensões locais, rotação nos três eixos, cor, duplicação, exclusão e encaixe opcional.
 - Apoiar no chão, centralizar no plano, zerar rotação, e isolar objeto. A lista permite buscar objetos, ocultar ou mostrar e restaurar a visibilidade de todos. Alterações da cena participam do histórico de desfazer/refazer.
 - Estatísticas de objetos e triângulos visíveis; grade e modo aramado opcionais.
 - Vista de frente, lado, topo, trás, esquerda e baixo; enquadrar selecionado ou todos os objetos visíveis.
 
-A extrusão altera a altura do objeto inteiro, não faces individuais. As vistas são perspectivas, não ortográficas. Não há edição de vértices/faces, materiais avançados ou renderização final ainda. As dimensões são medidas no espaço local do objeto, antes da rotação.
+Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas faces ou topologia. A ferramenta Extrudar anterior altera a altura do objeto inteiro. Os gizmos usam a convenção do Three.js: **Y é vertical e Z é profundidade**, enquanto o painel usa Z como vertical. As vistas são perspectivas, não ortográficas. Não há edição de vértices/faces, materiais avançados ou renderização final ainda. As dimensões são medidas no espaço local do objeto, antes da rotação.
 
 ## Arquivos
 
@@ -24,6 +24,7 @@ Botão central ou direito orbita; Shift com um desses botões faz panorâmica; a
 
 | Atalho | Ação |
 |---|---|
+| 1 / 2 / 3 / P | Gizmos de mover / girar / escalar / empurrar-puxar face de caixa |
 | V / G / R / E / O | Selecionar / mover / retângulo / extrudar / orbitar |
 | Shift+A / Shift+D | Adicionar / duplicar |
 | F / Home | Enquadrar selecionado / todos os visíveis |
@@ -46,4 +47,4 @@ npm test
 npm run build
 ```
 
-O build também gera `bender-studio.html`, o arquivo independente publicado no GitHub Pages. Os testes incluem integração de interface com renderizador simulado e testes de geometrias, exportadores OBJ/STL e validação de projetos; não substituem testes de WebGL em um navegador real. `rea/` contém uma cópia local separada da ferramenta REA para uso futuro.
+O build também gera `bender-studio.html`, o arquivo independente publicado no GitHub Pages. Os testes incluem integração de interface com renderizador simulado e testes de edição de faces, geometrias, exportadores OBJ/STL e validação de projetos; não substituem testes de WebGL em um navegador real. `rea/` contém uma cópia local separada da ferramenta REA para uso futuro.

@@ -17,6 +17,7 @@ test('desktop editor integrates primitives, history, visibility and persistence'
   const mod={exports:{}};new Function('require','module','exports',result.outputFiles[0].text)(require,mod,mod.exports);
   const $=selector=>window.document.querySelector(selector);const click=selector=>{assert.ok($(selector),selector);$(selector).click()};
   assert.equal($('#count').textContent,'1');
+  for(const tool of ['gizmo-move','gizmo-rotate','gizmo-scale','face','select']){click(`[data-tool="${tool}"]`);assert.ok($(`[data-tool="${tool}"]`).classList.contains('active'))}
   click('#add-menu');click('[data-add="cone"]');assert.equal($('#count').textContent,'2');
   $('#object-name').value='Minha peça';$('#object-name').dispatchEvent(new window.Event('change'));
   click('#duplicate');assert.equal($('#count').textContent,'3');click('#undo');assert.equal($('#count').textContent,'2');click('#redo');assert.equal($('#count').textContent,'3');
