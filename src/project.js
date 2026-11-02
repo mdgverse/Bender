@@ -1,7 +1,9 @@
+import {isUnit} from './units.js';
 import {isValidMeshPositions, MAX_SCENE_MESH_VALUES} from './mesh-import.js';
 /** Validate the portable scene format before replacing the current scene. */
 export function isValidProject(data) {
   if (!data || !Array.isArray(data.objects) || !Number.isSafeInteger(data.serial) || data.serial < 0 || data.objects.length > 1000) return false;
+  if (data.units !== undefined && !isUnit(data.units)) return false;
   if (data.title !== undefined && (typeof data.title !== 'string' || !data.title.trim() || data.title.length > 80)) return false;
   if (data.environment !== undefined && (!data.environment || typeof data.environment !== 'object' || typeof data.environment.background !== 'string' || !/^[0-9a-f]{6}$/i.test(data.environment.background) || !['ambient','direct'].every(k=>Number.isFinite(data.environment[k]) && data.environment[k]>=0 && data.environment[k]<=5))) return false;
   if (data.environment?.lightPosition !== undefined && (!Array.isArray(data.environment.lightPosition) || data.environment.lightPosition.length !== 3 || !data.environment.lightPosition.every(n=>Number.isFinite(n)&&Math.abs(n)<=10000))) return false;

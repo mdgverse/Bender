@@ -17,6 +17,12 @@ Protótipo web de modelagem 3D com foco em desktop, publicado em [Bender Studio]
 
 Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas faces ou topologia. A ferramenta Extrudar anterior altera a altura do objeto inteiro. Os gizmos usam a convenção do Three.js: **Y é vertical e Z é profundidade**, enquanto o painel usa Z como vertical. As vistas podem ser usadas em projeção perspectiva ou ortográfica. Não há edição de vértices/faces, materiais avançados ou renderização final ainda. As dimensões são medidas no espaço local do objeto, antes da rotação.
 
+## Projetos e unidades
+
+Na tela inicial, crie um projeto ou abra um dos projetos recentes pela miniatura. O botão **Projetos** retorna à biblioteca; a lixeira exclui um projeto local após confirmação. As alterações e miniaturas são salvas no armazenamento deste navegador, não na nuvem: podem ser perdidas ao limpar dados, trocar de navegador ou exceder o espaço disponível. Mantenha backups JSON. Uma cena salva pela versão anterior é migrada automaticamente e a cópia antiga é preservada.
+
+Escolha **m, cm, mm ou px** ao criar o projeto; é possível mudar no editor sem alterar a geometria. As dimensões, posições, medições, encaixe, repetições e posição da luz usam a unidade escolhida. A unidade px é uma convenção de modelagem (100 px = 1 m), não um pixel físico de tela. Os dados internos e as exportações GLB usam metros; OBJ e STL exportam os valores internos sem metadados de unidade.
+
 ## Arquivos
 
 O nome do projeto pode ser editado na barra superior e será usado nos arquivos exportados. A área de transferência de objetos é interna e dura até a página ser recarregada.

@@ -8,7 +8,7 @@ const require=createRequire(import.meta.url);
 test('desktop editor integrates primitives, history, visibility and persistence', async () => {
   const dom=new JSDOM('<!doctype html><div id="app"></div>',{url:'http://localhost/',pretendToBeVisual:true});
   const {window}=dom;
-  for(const key of ['window','document','localStorage','navigator','HTMLElement','SVGElement','Element','Node','Blob','FileReader']) Object.defineProperty(globalThis,key,{value:window[key],configurable:true,writable:true});
+  for(const key of ['window','document','localStorage','sessionStorage','navigator','HTMLElement','SVGElement','Element','Node','Blob','FileReader']) Object.defineProperty(globalThis,key,{value:window[key],configurable:true,writable:true});
   globalThis.devicePixelRatio=1;globalThis.requestAnimationFrame=()=>0;globalThis.ResizeObserver=class{observe(){}};
   const result=await build({entryPoints:['src/main.js'],bundle:true,write:false,format:'cjs',platform:'node',loader:{'.css':'empty'},plugins:[{name:'mock-renderer',setup(build){
     build.onResolve({filter:/^three$/},args=>args.importer.endsWith('/src/main.js')?{path:'renderer',namespace:'mock'}:null);
@@ -16,6 +16,7 @@ test('desktop editor integrates primitives, history, visibility and persistence'
   }}]});
   const mod={exports:{}};new Function('require','module','exports',result.outputFiles[0].text)(require,mod,mod.exports);
   const $=selector=>window.document.querySelector(selector);const click=selector=>{assert.ok($(selector),selector);$(selector).click()};
+  assert.equal($('#start-screen').hidden,false);$('#new-project-form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));assert.equal($('#start-screen').hidden,true);
   assert.equal($('#count').textContent,'1');
   window.dispatchEvent(new window.KeyboardEvent('keydown',{key:'5',code:'Digit5'}));assert.equal($('#projection-label').textContent,'ORTOGRÁFICA');window.dispatchEvent(new window.KeyboardEvent('keydown',{key:'5',code:'Numpad5'}));assert.equal($('#projection-label').textContent,'PERSPECTIVA');
   click('#projection-toggle');assert.equal($('#projection-label').textContent,'ORTOGRÁFICA');click('#frame-all');click('#projection-toggle');assert.equal($('#projection-label').textContent,'PERSPECTIVA');
