@@ -30,3 +30,12 @@ export function editCutBeneathBevel(recipe,position,scale,quaternion,{mode,depth
     return {geometry:rebuilt.geometry,position:nextPosition,scale:nextScale,recipe:{...recipe,sourceGeometry:rebuilt.geometry,sourceScale:rebuilt.scale.toArray(),sourceCut:rebuilt.recipe,edge:matches[0],center:[0,0,0],resultScale:rebuilt.scale.toArray()}};
   } finally {geometry.dispose()}
 }
+
+/** Edit the cut and rebuild an active bevel as a single atomic operation. */
+export function editCutWithBevel(recipe,position,scale,quaternion,options){
+  if(!isValidMeshBevel(recipe))throw new Error('Parâmetros do chanfro inválidos.');
+  if(recipe.enabled===false)return editCutBeneathBevel(recipe,position,scale,quaternion,options);
+  const disabled=editMeshBevel(recipe,position,scale,quaternion,recipe.amount,recipe.segments,false);
+  const edited=editCutBeneathBevel(disabled.recipe,disabled.position,disabled.scale,quaternion,options);
+  return editMeshBevel(edited.recipe,edited.position,edited.scale,quaternion,recipe.amount,recipe.segments,true);
+}
