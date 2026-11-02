@@ -55,7 +55,7 @@ Em **Adicionar → Escada reta**, ajuste largura, profundidade, altura total e n
 
 ## Deformar caixas
 
-Selecione uma caixa original e use **Deformar caixa** para afunilar o topo ou incliná-lo em X ou Y local, mantendo a base no lugar. Os campos mostram prévia no modelo; cancelar preserva o original e aplicar cria uma malha independente, com desfazer/refazer. O deslocamento usa a unidade do projeto. A ferramenta funciona somente em caixas ainda não convertidas em malha; após aplicar, as ferramentas específicas de caixas deixam de estar disponíveis para aquele objeto.
+Selecione uma caixa original e use **Deformar caixa** para afunilar o topo ou incliná-lo em X ou Y local, mantendo a base no lugar. Os campos mostram prévia no modelo; cancelar preserva o original e aplicar cria uma malha independente, com desfazer/refazer. O deslocamento usa a unidade do projeto. A ferramenta começa em caixas ainda não convertidas em malha. Após aplicar, os parâmetros continuam editáveis nas propriedades, com atualização imediata, opção de desativar ou remover a deformação e restaurar a caixa. As cópias e o projeto salvo mantêm os parâmetros; uma operação posterior que substitua a geometria avisa antes de descartá-los. Deformações antigas permanecem como malhas comuns.
 
 ## Organização avançada da cena
 
