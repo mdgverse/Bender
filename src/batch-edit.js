@@ -25,8 +25,8 @@ export function planBatchTransform(objects,action,options={}){
 export function planBatchNames(objects,action,{text='',find='',replacement=''}={}){
   if(!objects.length)throw new Error('Nenhum resultado para renomear.');
   if(action==='replace'&&!find)throw new Error('Informe o texto a localizar.');
-  if(!['prefix','suffix','replace'].includes(action))throw new Error('Operação desconhecida.');
-  const names=objects.map(o=>action==='prefix'?text+o.userData.name:action==='suffix'?o.userData.name+text:o.userData.name.split(find).join(replacement));
+  if(!['prefix','suffix','replace','upper','lower','trim'].includes(action))throw new Error('Operação desconhecida.');
+  const names=objects.map(o=>action==='prefix'?text+o.userData.name:action==='suffix'?o.userData.name+text:action==='replace'?o.userData.name.split(find).join(replacement):action==='upper'?o.userData.name.toLocaleUpperCase('pt-BR'):action==='lower'?o.userData.name.toLocaleLowerCase('pt-BR'):o.userData.name.trim());
   if(names.some(n=>!n.trim()||n.length>100||/[\u0000-\u001f\u007f]/.test(n)))throw new Error('Os nomes devem ter de 1 a 100 caracteres e não podem conter caracteres de controle.');
   return names;
 }
@@ -51,3 +51,6 @@ export function planBatchLayout(objects,{axis,mode,gap=0}){
   }
   return items.map(item=>{const {object}=item,position=object.position.clone();position[axis]+=deltas.get(item);if(position.toArray().some(v=>!Number.isFinite(v)||Math.abs(v)>100000))throw new Error('Resultado fora dos limites da cena; nenhum objeto foi alterado.');return {object,position,rotation:object.rotation.clone(),scale:object.scale.clone()}});
 }
+
+/** Validates selected material channels before any object is modified. */
+export function validateBatchMaterial(values){const keys=Object.keys(values);if(!keys.length)throw new Error('Selecione ao menos uma propriedade.');for(const key of keys){const v=values[key];if(key==='color'){if(typeof v!=='string'||!/^#[0-9a-f]{6}$/i.test(v))throw new Error('Cor inválida.')}else if(!['roughness','metalness','opacity'].includes(key)||!Number.isFinite(v)||v<0||v>1)throw new Error('Os valores de material devem estar entre 0 e 1.')}return values}

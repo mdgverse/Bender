@@ -71,6 +71,10 @@ Em **Ações dos resultados filtrados → Transformar resultados**, desloque, gi
 
 Em **Alinhar e distribuir resultados**, alinhe os limites mínimos, os centros ou os limites máximos ao longo de um eixo global. Distribua centros igualmente entre os extremos ou iguale os espaços entre os limites mantendo os extremos (ao menos três objetos); também é possível definir um espaço fixo entre os limites (ao menos dois). A distribuição entre extremos é recusada se não houver espaço sem sobreposição. Os limites são caixas envolventes no mundo, inclusive para objetos rotacionados; a ordem é espacial, não a ordem da lista. As ações incluem resultados ocultos e bloqueados e podem ser desfeitas.
 
+A busca de cena ignora diferenças de acentuação e pode procurar em nomes, etiquetas ou ambos. Filtre objetos com ou sem parâmetros editáveis, ou por corte, chanfro, deformação e escada; um chanfro após corte conta nas duas categorias. Ordene também por posição global ou dimensão local nos eixos. Esses filtros e ordenações não modificam a cena.
+
+Em **Editar nomes dos resultados**, aplique maiúsculas, minúsculas ou remova espaços das pontas. Em **Definir propriedades de material**, marque quais canais quer aplicar: cor, rugosidade, metalicidade e/ou opacidade. Valores não marcados são preservados; uma entrada inválida impede toda a alteração. Como nas demais ações filtradas, inclui objetos ocultos ou bloqueados e cada aplicação pode ser desfeita.
+
 Em **Ações da etiqueta filtrada**, oculte, mostre, bloqueie ou desbloqueie todos os objetos dessa etiqueta, mesmo se estiverem fora dos resultados da busca. As ações podem ser desfeitas. Etiquetas são salvas no projeto e mantidas em duplicações, cópias, repetições e divisões de caixas. Projetos antigos continuam compatíveis. As etiquetas são rótulos de organização, não grupos hierárquicos de transformação.
 
 ## Organizar projetos e cenas
