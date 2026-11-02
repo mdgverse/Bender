@@ -9,7 +9,7 @@ async function gotoAndStart(page,path) {
 for (const path of ['/', '/bender-studio.html']) {
   test(`projection and material controls work in browser: ${path}`, async ({page}) => {
     const errors=[];page.on('pageerror',error=>errors.push(error.message));
-    await gotoAndStart(page,path);await expect(page.locator('canvas')).toBeVisible();
+    await gotoAndStart(page,path);await expect(page.locator('#canvas canvas')).toBeVisible();
     await expect(page.locator('#projection-label')).toHaveText('PERSPECTIVA');
     await page.keyboard.press('5');await expect(page.locator('#projection-label')).toHaveText('ORTOGRÁFICA');
     await page.keyboard.press('Numpad5');await expect(page.locator('#projection-label')).toHaveText('PERSPECTIVA');
@@ -76,9 +76,9 @@ test('scene environment and quick transforms persist and undo', async ({page}) =
 test('point light visibly illuminates the model and its settings persist', async ({page}) => {
   await gotoAndStart(page,'/bender-studio.html');await page.locator('#scene-light').click();await expect(page.locator('#light-properties')).toBeVisible();
   await page.locator('#light-properties').click();await page.locator('#environment-ambient').fill('0');await page.locator('#environment-direct').fill('0');await page.locator('#light-marker-visible').uncheck();await page.locator('#environment-form button[type="submit"]').click();
-  await page.locator('[data-index="0"]').click();await page.waitForTimeout(300);const dark=await page.locator('canvas').screenshot();
+  await page.locator('[data-index="0"]').click();await page.waitForTimeout(300);const dark=await page.locator('#canvas canvas').screenshot();
   await page.locator('#environment-open').click();await page.locator('#environment-direct').fill('5');await page.locator('#environment-form button[type="submit"]').click();
-  await page.waitForTimeout(300);const lit=await page.locator('canvas').screenshot();expect(dark.equals(lit)).toBe(false);
+  await page.waitForTimeout(300);const lit=await page.locator('#canvas canvas').screenshot();expect(dark.equals(lit)).toBe(false);
   await page.locator('#environment-open').click();await page.locator('#light-x').fill('2');await page.locator('#light-y').fill('1');await page.locator('#light-z').fill('3');await page.locator('#environment-light-color').fill('#ffcc99');await page.locator('#environment-form button[type="submit"]').click();
   let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.environment).toMatchObject({ambient:0,direct:5,lightPosition:[2,3,1],lightColor:'ffcc99',showLight:false});
   await page.reload();await page.locator('#environment-open').click();await expect(page.locator('#light-z')).toHaveValue('3');await expect(page.locator('#environment-direct')).toHaveValue('5');await expect(page.locator('#light-marker-visible')).not.toBeChecked();
@@ -86,7 +86,7 @@ test('point light visibly illuminates the model and its settings persist', async
 
 test('measure two points on the ground plane without modifying the project', async ({page}) => {
   await gotoAndStart(page,'/bender-studio.html');const before=await page.evaluate(()=>localStorage.getItem('bender-scene-v1'));await page.locator('[data-view="top"]').click();await page.keyboard.press('m');
-  await expect(page.locator('#measure-readout')).toBeVisible();const rect=await page.locator('canvas').boundingBox();
+  await expect(page.locator('#measure-readout')).toBeVisible();const rect=await page.locator('#canvas canvas').boundingBox();
   await page.mouse.click(rect.x+rect.width*.35,rect.y+rect.height*.35);await page.mouse.move(rect.x+rect.width*.65,rect.y+rect.height*.35);
   await expect(page.locator('#measure-values')).toContainText('Distância');const preview=await page.locator('#measure-values').textContent();expect(preview).not.toContain('Distância 0.00');
   await page.mouse.click(rect.x+rect.width*.65,rect.y+rect.height*.35);await expect(page.locator('#measure-values')).toHaveText(preview);
@@ -96,9 +96,9 @@ test('measure two points on the ground plane without modifying the project', asy
 
 test('shadows change the viewport and survive reload', async ({page}) => {
   await gotoAndStart(page,'/bender-studio.html');await page.locator('#environment-open').click();await page.locator('#environment-shadows').uncheck();await page.locator('#environment-direct').fill('3');await page.locator('#light-marker-visible').uncheck();await page.locator('#environment-form button[type="submit"]').click();
-  await page.waitForTimeout(500);const without=await page.locator('canvas').screenshot();
+  await page.waitForTimeout(500);const without=await page.locator('#canvas canvas').screenshot();
   await page.locator('#environment-open').click();await page.locator('#environment-shadows').check();await page.locator('#environment-form button[type="submit"]').click();
-  await page.waitForTimeout(500);const withShadow=await page.locator('canvas').screenshot();expect(without.equals(withShadow)).toBe(false);
+  await page.waitForTimeout(500);const withShadow=await page.locator('#canvas canvas').screenshot();expect(without.equals(withShadow)).toBe(false);
   await page.reload();await page.locator('#environment-open').click();await expect(page.locator('#environment-shadows')).toBeChecked();
 });
 
