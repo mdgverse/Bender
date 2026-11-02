@@ -37,6 +37,12 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 - Na aba Materiais, use **Copiar material** e **Colar material** para reutilizar cor, rugosidade, metalização e opacidade em outro objeto. A cópia de material dura apenas durante a sessão do projeto.
 - Essas alterações podem ser desfeitas e refeitas; os resultados são salvos no projeto.
 
+## Chanfro editável de caixa
+
+Ao aplicar um chanfro a uma aresta de uma caixa original, seus parâmetros ficam nas propriedades: aresta, largura e segmentos podem ser alterados depois, com atualização no modelo, inclusive após salvar e reabrir. **Remover chanfro** retorna à caixa original; desfazer/refazer e cópias também preservam a edição. A largura usa a unidade atual do projeto; alterações de escala podem exigir ajustar esse valor antes de modificar os parâmetros.
+
+Por enquanto somente o primeiro chanfro de uma caixa original é editável. Chanfros em malhas, cortes e operações sólidas continuam destrutivos. Uma operação posterior que substitua a geometria avisa que os parâmetros editáveis serão perdidos; a substituição pode ser desfeita durante a sessão. Projetos e chanfros antigos permanecem como malhas comuns.
+
 ## Escada reta
 
 Em **Adicionar → Escada reta**, ajuste largura, profundidade, altura total e número de degraus com prévia em tempo real. A escada é uma malha sólida no centro da cena, apoiada no chão. A ferramenta usa a unidade do projeto e permite cancelar antes de criar; a criação pode ser desfeita. O número de degraus continua editável diretamente nas propriedades mesmo após salvar e reabrir; largura, profundidade e altura podem ser ajustadas em Dimensões. O histórico permite desfazer essas alterações, e cópias preservam os parâmetros. Escadas criadas antes deste recurso continuam sendo malhas comuns. Operações que substituem a geometria, como chanfro e corte, ainda são destrutivas: ao aplicá-las à escada, há um aviso e os degraus deixam de ser editáveis, mas é possível desfazer.
