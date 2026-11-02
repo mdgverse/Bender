@@ -33,3 +33,4 @@ dialog{background:#282a2c;color:#dedfdf;border:1px solid #515355;border-radius:8
 .stair-settings .modifier-toggle{display:flex;align-items:center;gap:7px;margin:8px 0}.stair-settings .modifier-toggle input{width:auto}
 .nested-cut{border-top:1px solid #454749;margin-top:10px;padding-top:10px}.nested-cut label{margin-top:7px}
 .cut-rect-fields{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.cut-rect-fields label{min-width:0}.cut-rect-fields input{width:100%;min-width:0}
+.batch-transform,.batch-text{margin-top:8px}.batch-transform label,.batch-text label{display:block;margin:6px 0}.batch-transform input,.batch-transform select,.batch-text input{width:100%;min-width:0}.batch-transform button,.batch-text button{margin:3px 2px}.batch-vector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.batch-vector label{min-width:0}

@@ -67,6 +67,8 @@ Em **Ações dos resultados filtrados**, é possível mostrar, ocultar, bloquear
 
 Atribua uma **Etiqueta** nas propriedades de um objeto, por exemplo “Paredes” ou “Móveis”. O seletor na lista da cena filtra objetos por etiqueta ou mostra apenas os sem etiqueta; a busca por nome funciona junto com o filtro. O filtro afeta somente a lista, não oculta objetos no viewport nem altera o que é exportado.
 
+Em **Ações dos resultados filtrados → Transformar resultados**, desloque, gire, escale, apoie no chão, centralize horizontalmente, zere rotações ou ajuste posições à grade. As transformações são individuais (não de um grupo) e incluem resultados ocultos e bloqueados. Em **Editar nomes dos resultados**, acrescente prefixo ou sufixo e substitua texto literal nos nomes. Cada ação é validada antes de alterar qualquer objeto e pode ser desfeita durante a sessão. Deslocamento e passo usam a unidade do projeto; X e Y são horizontais, Z é vertical. As transformações não apagam os parâmetros editáveis da geometria.
+
 Em **Ações da etiqueta filtrada**, oculte, mostre, bloqueie ou desbloqueie todos os objetos dessa etiqueta, mesmo se estiverem fora dos resultados da busca. As ações podem ser desfeitas. Etiquetas são salvas no projeto e mantidas em duplicações, cópias, repetições e divisões de caixas. Projetos antigos continuam compatíveis. As etiquetas são rótulos de organização, não grupos hierárquicos de transformação.
 
 ## Organizar projetos e cenas
