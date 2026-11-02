@@ -1,3 +1,4 @@
+import {isValidTag} from './tags.js';
 import {isUnit} from './units.js';
 import {isValidMeshPositions, MAX_SCENE_MESH_VALUES} from './mesh-import.js';
 /** Validate the portable scene format before replacing the current scene. */
@@ -19,6 +20,7 @@ export function isValidProject(data) {
     if (o.color !== undefined && (typeof o.color !== 'string' || !/^[0-9a-f]{6}$/i.test(o.color))) return false;
     if (['rotation', 'rotationX', 'rotationZ'].some(key => o[key] !== undefined && !Number.isFinite(o[key]))) return false;
     if (['roughness', 'metalness', 'opacity'].some(key => o[key] !== undefined && (!Number.isFinite(o[key]) || o[key] < 0 || o[key] > 1))) return false;
+    if (o.tag !== undefined && !isValidTag(o.tag)) return false;
     if (o.locked !== undefined && typeof o.locked !== 'boolean') return false;
     if (o.visible !== undefined && typeof o.visible !== 'boolean') return false;
     if (!Array.isArray(o.position) || !Array.isArray(o.scale) || o.position.length !== 3 || o.scale.length !== 3) return false;

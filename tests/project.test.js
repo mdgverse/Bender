@@ -44,3 +44,4 @@ test('validates light position, color and marker visibility',()=>{
 test('shadow setting is optional for older projects and accepts only booleans',()=>{
   const p=valid();p.environment={background:'242628',ambient:.6,direct:2};assert.equal(isValidProject(p),true);p.environment.shadows=true;assert.equal(isValidProject(p),true);p.environment.shadows='yes';assert.equal(isValidProject(p),false);
 });
+test('accepts optional tags and rejects unsafe tags',()=>{const data=valid();assert.equal(isValidProject(data),true);data.objects[0].tag='Móveis';assert.equal(isValidProject(data),true);data.objects[0].tag='x'.repeat(41);assert.equal(isValidProject(data),false);data.objects[0].tag={};assert.equal(isValidProject(data),false);data.objects[0].tag='a\nb';assert.equal(isValidProject(data),false)});

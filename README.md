@@ -37,6 +37,12 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 - Na aba Materiais, use **Copiar material** e **Colar material** para reutilizar cor, rugosidade, metalização e opacidade em outro objeto. A cópia de material dura apenas durante a sessão do projeto.
 - Essas alterações podem ser desfeitas e refeitas; os resultados são salvos no projeto.
 
+## Etiquetas de objetos
+
+Atribua uma **Etiqueta** nas propriedades de um objeto, por exemplo “Paredes” ou “Móveis”. O seletor na lista da cena filtra objetos por etiqueta ou mostra apenas os sem etiqueta; a busca por nome funciona junto com o filtro. O filtro afeta somente a lista, não oculta objetos no viewport nem altera o que é exportado.
+
+Em **Ações da etiqueta filtrada**, oculte, mostre, bloqueie ou desbloqueie todos os objetos dessa etiqueta, mesmo se estiverem fora dos resultados da busca. As ações podem ser desfeitas. Etiquetas são salvas no projeto e mantidas em duplicações, cópias, repetições e divisões de caixas. Projetos antigos continuam compatíveis. As etiquetas são rótulos de organização, não grupos hierárquicos de transformação.
+
 ## Organizar projetos e cenas
 
 - Na biblioteca inicial, busque projetos pelo nome e ordene por nome, mais recentes ou mais antigos. Em cada cartão, use os botões para renomear, duplicar, baixar um JSON individual ou excluir o projeto. Duplicar cria um projeto independente, com sua própria cópia da cena e miniatura.
