@@ -25,3 +25,8 @@ test('preserves compatibility with new primitive, visibility and rotations', () 
   const data=valid();data.objects[0].visible='false';assert.equal(isValidProject(data),false);
   data.objects[0].visible=true;data.objects[0].rotationX=NaN;assert.equal(isValidProject(data),false);
 });
+
+test('accepts valid material values and rejects malformed values',()=>{
+  const data=valid(); Object.assign(data.objects[0],{roughness:.5,metalness:1,opacity:0});assert.equal(isValidProject(data),true);
+  for(const [key,value] of [['roughness',-1],['metalness',2],['opacity','0.5']]){const scene=valid();scene.objects[0][key]=value;assert.equal(isValidProject(scene),false)}
+});
