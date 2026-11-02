@@ -4,6 +4,7 @@ export function isValidProject(data) {
   if (!Number.isInteger(data.selected) || data.selected < -1 || data.selected >= data.objects.length) return false;
   return data.objects.every(o => {
     if (!o || typeof o !== 'object' || typeof o.name !== 'string' || o.name.length > 100) return false;
+    if (o.type !== undefined && !['box', 'sphere', 'cylinder'].includes(o.type)) return false;
     if (o.color !== undefined && (typeof o.color !== 'string' || !/^[0-9a-f]{6}$/i.test(o.color))) return false;
     if (o.rotation !== undefined && !Number.isFinite(o.rotation)) return false;
     if (!Array.isArray(o.position) || !Array.isArray(o.scale) || o.position.length !== 3 || o.scale.length !== 3) return false;

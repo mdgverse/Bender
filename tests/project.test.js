@@ -14,3 +14,7 @@ test('rejects malformed or unsafe project data', () => {
   }
   const scene=valid();scene.selected=5;assert.equal(isValidProject(scene),false);
 });
+test('accepts supported primitive types and rejects unknown ones', () => {
+  for (const type of ['box', 'sphere', 'cylinder']) {const data=valid(); data.objects[0].type=type; assert.equal(isValidProject(data),true)}
+  const data=valid();data.objects[0].type='unknown';assert.equal(isValidProject(data),false);
+});
