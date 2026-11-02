@@ -253,9 +253,9 @@ test('repetition and box splitting retain the source tag',async({page})=>{
 
 test('scene filters and sorting combine without changing scene order',async({page})=>{
   await gotoAndStart(page,'/bender-studio.html');await page.locator('#object-name').fill('Cubo 10');await page.locator('#object-name').press('Tab');await page.locator('#duplicate').click();await page.locator('#object-name').fill('Cubo 2');await page.locator('#object-name').press('Tab');await page.locator('#add-menu').click();await page.locator('[data-add="sphere"]').click();
-  await page.locator('.scene-filter-tools summary').click();await page.locator('#scene-sort').selectOption('name');await expect(page.locator('.scene-name')).toHaveText(['Cubo 2','Cubo 10','Esfera 02']);
+  await page.locator('.scene-filter-tools summary').click();await page.locator('#scene-sort').selectOption('name');await expect(page.locator('.scene-name')).toHaveText(['Cubo 2','Cubo 10','Esfera 03']);
   await page.locator('#scene-type-filter').selectOption('box');await expect(page.locator('.scene-row')).toHaveCount(2);await page.locator('[data-lock="0"]').click();await page.locator('#scene-state-filter').selectOption('locked');await expect(page.locator('.scene-name')).toHaveText(['Cubo 10']);await expect(page.locator('#scene-filter-count')).toHaveText('1 de 3 objetos na lista');
-  await page.locator('#scene-clear-filters').click();await expect(page.locator('.scene-name')).toHaveText(['Cubo 10','Cubo 2','Esfera 02']);
+  await page.locator('#scene-clear-filters').click();await expect(page.locator('.scene-name')).toHaveText(['Cubo 10','Cubo 2','Esfera 03']);
 });
 
 test('filtered batch actions, tagging and deletion are undoable',async({page})=>{
