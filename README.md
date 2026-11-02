@@ -140,3 +140,5 @@ npx playwright test
 ```
 
 O build também gera `bender-studio.html`, o arquivo independente publicado no GitHub Pages. Os testes incluem integração de interface com renderizador simulado e testes de edição de faces, câmeras, geometrias, exportadores GLB/OBJ/STL e validação de projetos; incluem também testes de interface em Chromium no GitHub Actions. `rea/` contém uma cópia local separada da ferramenta REA para uso futuro.
+
+As deformações editáveis permitem ajustar as três dimensões da caixa original sem descartar o afunilamento ou a inclinação, inclusive com a deformação desativada. Os valores são anteriores à escala aplicada ao objeto e mantêm fixo o centro original. Escadas editáveis permitem inverter o sentido da subida sem alterar a transformação do objeto; o sentido também é preservado ao editar os degraus e reabrir o projeto.
