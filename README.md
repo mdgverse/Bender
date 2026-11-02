@@ -37,6 +37,10 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 - Na aba Materiais, use **Copiar material** e **Colar material** para reutilizar cor, rugosidade, metalização e opacidade em outro objeto. A cópia de material dura apenas durante a sessão do projeto.
 - Essas alterações podem ser desfeitas e refeitas; os resultados são salvos no projeto.
 
+## Escada reta
+
+Em **Adicionar → Escada reta**, ajuste largura, profundidade, altura total e número de degraus com prévia em tempo real. A escada é uma malha sólida no centro da cena, apoiada no chão. A ferramenta usa a unidade do projeto e permite cancelar antes de criar; a criação pode ser desfeita. A malha resultante pode ser transformada, receber material, ser salva e exportada, mas os parâmetros da escada não permanecem editáveis depois da criação.
+
 ## Deformar caixas
 
 Selecione uma caixa original e use **Deformar caixa** para afunilar o topo ou incliná-lo em X ou Y local, mantendo a base no lugar. Os campos mostram prévia no modelo; cancelar preserva o original e aplicar cria uma malha independente, com desfazer/refazer. O deslocamento usa a unidade do projeto. A ferramenta funciona somente em caixas ainda não convertidas em malha; após aplicar, as ferramentas específicas de caixas deixam de estar disponíveis para aquele objeto.
