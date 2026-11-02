@@ -33,3 +33,7 @@ test('accepts valid material values and rejects malformed values',()=>{
 test('project titles are optional for older files and validated when present',()=>{
   const data=valid();assert.equal(isValidProject(data),true);data.title='Oficina';assert.equal(isValidProject(data),true);data.title='  ';assert.equal(isValidProject(data),false);data.title='x'.repeat(81);assert.equal(isValidProject(data),false);
 });
+test('validates scene lighting and object locking, retaining legacy compatibility',()=>{
+  const p=valid();assert.equal(isValidProject(p),true);p.environment={background:'abcdef',ambient:2,direct:1};p.objects[0].locked=true;assert.equal(isValidProject(p),true);
+  p.environment.direct=6;assert.equal(isValidProject(p),false);p.environment.direct=1;p.objects[0].locked='yes';assert.equal(isValidProject(p),false);
+});

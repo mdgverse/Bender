@@ -4,9 +4,11 @@ Protótipo web de modelagem 3D com foco em desktop, publicado em [Bender Studio]
 
 ## Modelagem e cena
 
-- Seleção, retângulos no plano, extrusão por altura e movimentação no plano; primitivas de cubo, esfera, cilindro, cone, pirâmide, toro, tetraedro e icosaedro.
+- Seleção, retângulos no plano, extrusão por altura e movimentação no plano; primitivas de cubo, esfera, cilindro, cone, pirâmide, toro, tetraedro, icosaedro, octaedro, dodecaedro e cápsula.
 - Gizmos de movimentação, rotação e escala; empurrar/puxar faces de caixas mantendo a face oposta fixa. Nome, posição, dimensões locais, rotação nos três eixos, cor, duplicação, exclusão e encaixe opcional.
-- Apoiar no chão, centralizar no plano, zerar rotação, e isolar objeto. A lista permite buscar objetos, ocultar ou mostrar e restaurar a visibilidade de todos. Alterações da cena participam do histórico de desfazer/refazer.
+- Apoiar no chão, centralizar no plano, zerar rotação, isolar, mover à origem, normalizar dimensões, girar 90° nos eixos e escalar pela metade ou pelo dobro. A lista permite buscar objetos, ocultar, mostrar, bloquear/desbloquear objetos e restaurar a visibilidade de todos. Objetos bloqueados não podem ser selecionados ou editados até serem desbloqueados. Alterações da cena participam do histórico de desfazer/refazer.
+- Repetições lineares por eixo e circulares no plano XY, com número de cópias, distância ou raio configuráveis; a operação inteira pode ser desfeita de uma vez. As cópias são independentes.
+- Configuração de cor de fundo e intensidades de luz ambiente e direcional, salvas no projeto e com desfazer. A iluminação é apenas do viewport; não é exportada como luz no GLB.
 - Estatísticas de objetos e triângulos visíveis; grade e modo aramado opcionais.
 - Na aba Materiais, selecione um objeto e ajuste seus materiais básicos: cor, rugosidade, metalização e opacidade, com presets fosco, metal e translúcido. O preset translúcido usa transparência simples, não refração física.
 - Vista de frente, lado, topo, trás, esquerda e baixo; enquadrar selecionado ou todos os objetos visíveis.

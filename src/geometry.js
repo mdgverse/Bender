@@ -9,6 +9,9 @@ export const PRIMITIVES = {
   torus: {label:'Toro', create:()=>new THREE.TorusGeometry(.35,.15,16,48).rotateX(Math.PI/2)},
   tetrahedron: {label:'Tetraedro', create:()=>new THREE.TetrahedronGeometry(.5)},
   icosahedron: {label:'Icosaedro', create:()=>new THREE.IcosahedronGeometry(.5)},
+  octahedron: {label:'Octaedro', create:()=>new THREE.OctahedronGeometry(.5)},
+  dodecahedron: {label:'Dodecaedro', create:()=>new THREE.DodecahedronGeometry(.5)},
+  capsule: {label:'Cápsula', create:()=>new THREE.CapsuleGeometry(.35,.3,8,24)},
 };
 
 // Every primitive has a one-unit bounding box, so dimensions in the inspector

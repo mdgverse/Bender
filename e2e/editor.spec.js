@@ -42,3 +42,26 @@ test('published page has working projection and material controls', async ({page
   await page.locator('#materials-tab').click();await expect(page.locator('[data-material="roughness"]')).toBeVisible();
   await expect(page.locator('.status')).toContainText('v0.2.1');
 });
+
+test('linear and circular copies can be undone as single actions', async ({page}) => {
+  await page.goto('/bender-studio.html');await page.locator('#edit-menu').click();await page.locator('#array-open').click();
+  await page.locator('#array-count').fill('3');await page.locator('#array-axis').selectOption('z');await page.locator('#array-distance').fill('1.5');await page.locator('#array-form button[type="submit"]').click();
+  await expect(page.locator('#count')).toHaveText('4');let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects.map(o=>o.position[1])).toEqual([1,2.5,4,5.5]);
+  await page.locator('#undo').click();await expect(page.locator('#count')).toHaveText('1');
+  await page.locator('#edit-menu').click();await page.locator('#array-open').click();await page.locator('#array-mode').selectOption('radial');await page.locator('#array-count').fill('4');await page.locator('#array-radius').fill('3');await page.locator('#array-rotate').check();await page.locator('#array-form button[type="submit"]').click();
+  await expect(page.locator('#count')).toHaveText('5');data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects[2].rotation).toBeCloseTo(-Math.PI/2);await page.locator('#undo').click();await expect(page.locator('#count')).toHaveText('1');
+});
+
+test('locks protect objects, survive reload and are undoable', async ({page}) => {
+  await page.goto('/bender-studio.html');await page.locator('[data-lock="0"]').click();await expect(page.locator('#properties')).toContainText('Selecione um objeto');
+  await page.locator('[data-index="0"]').click();await expect(page.locator('#properties')).toContainText('Selecione um objeto');
+  await page.reload();await expect(page.locator('[data-lock="0"]')).toHaveAttribute('title','Desbloquear objeto');
+  await page.locator('[data-lock="0"]').click();await page.locator('[data-index="0"]').click();await expect(page.locator('#object-name')).toHaveValue('Cubo');
+});
+
+test('scene environment and quick transforms persist and undo', async ({page}) => {
+  await page.goto('/bender-studio.html');await page.locator('#environment-open').click();await page.locator('#environment-background').fill('#556677');await page.locator('#environment-ambient').fill('1');await page.locator('#environment-direct').fill('3');await page.locator('#environment-form button[type="submit"]').click();
+  let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.environment).toEqual({background:'556677',ambient:1,direct:3});
+  await page.locator('.advanced-transforms summary').click();await page.locator('[data-action="double"]').click();data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects[0].scale).toEqual([4,4,4]);
+  await page.locator('#undo').click();await page.locator('#undo').click();data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.environment.background).toBe('242628');
+});

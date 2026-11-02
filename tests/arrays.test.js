@@ -1,0 +1,4 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {arrayOffsets} from '../src/arrays.js';
+test('linear copies follow chosen axis and can use negative distance',()=>{assert.deepEqual(arrayOffsets({mode:'linear',count:3,axis:'z',distance:-2}).map(o=>o.z),[-2,-4,-6])});
+test('radial copies are evenly spaced around the origin',()=>{const a=arrayOffsets({mode:'radial',count:4,radius:2});for(const p of a)assert.ok(Math.abs(Math.hypot(p.x,p.y)-2)<1e-9);assert.ok(Math.abs(a[1].x)<1e-9);assert.ok(Math.abs(a[1].y-2)<1e-9)});
+test('rejects invalid counts, axes and bounds',()=>{for(const input of [{mode:'linear',count:0},{mode:'linear',count:101},{mode:'other',count:2},{mode:'linear',count:2,axis:'q'},{mode:'radial',count:3,radius:0}])assert.throws(()=>arrayOffsets(input))});
