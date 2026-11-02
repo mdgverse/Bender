@@ -15,6 +15,8 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 
 ## Arquivos
 
+O nome do projeto pode ser editado na barra superior e será usado nos arquivos exportados. A área de transferência de objetos é interna e dura até a página ser recarregada.
+
 A cena é salva automaticamente no armazenamento local do navegador; limpar esses dados pode apagá-la. Use Arquivo → Baixar projeto para fazer backup em JSON, e Arquivo → Abrir projeto para restaurá-lo. O histórico não é preservado ao recarregar. Projetos da versão anterior continuam compatíveis.
 
 É possível exportar os objetos **visíveis** em GLB, OBJ ou STL, ou salvar uma captura PNG do viewport. GLB inclui cor, rugosidade, metalização e opacidade; OBJ e STL exportam geometria, sem cores ou materiais. As preferências de visualização, como projeção, grade e aramado, não são salvas no projeto.
@@ -35,6 +37,7 @@ Botão central ou direito orbita; Shift com um desses botões faz panorâmica; a
 | Ctrl+Num 1 / 3 / 7 | Vistas traseira / esquerda / inferior |
 | Delete / Backspace | Excluir selecionado |
 | Ctrl/Cmd+Z / Ctrl/Cmd+Shift+Z | Desfazer / refazer |
+| Ctrl/Cmd+C / Ctrl/Cmd+V / Ctrl/Cmd+X | Copiar / colar / recortar objeto na sessão |
 | Ctrl/Cmd+S | Baixar projeto JSON |
 | Esc | Cancelar gesto ou voltar à seleção |
 
@@ -47,6 +50,8 @@ npm install
 npm run dev
 npm test
 npm run build
+npx playwright install chromium
+npx playwright test
 ```
 
-O build também gera `bender-studio.html`, o arquivo independente publicado no GitHub Pages. Os testes incluem integração de interface com renderizador simulado e testes de edição de faces, câmeras, geometrias, exportadores GLB/OBJ/STL e validação de projetos; não substituem testes de WebGL em um navegador real. `rea/` contém uma cópia local separada da ferramenta REA para uso futuro.
+O build também gera `bender-studio.html`, o arquivo independente publicado no GitHub Pages. Os testes incluem integração de interface com renderizador simulado e testes de edição de faces, câmeras, geometrias, exportadores GLB/OBJ/STL e validação de projetos; incluem também testes de interface em Chromium no GitHub Actions. `rea/` contém uma cópia local separada da ferramenta REA para uso futuro.

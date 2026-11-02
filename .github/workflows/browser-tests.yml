@@ -18,3 +18,5 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test
+        env:
+          BENDER_LIVE_URL: ${{ github.event_name == 'workflow_dispatch' && 'https://mdgverse.github.io/Bender/' || '' }}

@@ -30,3 +30,6 @@ test('accepts valid material values and rejects malformed values',()=>{
   const data=valid(); Object.assign(data.objects[0],{roughness:.5,metalness:1,opacity:0});assert.equal(isValidProject(data),true);
   for(const [key,value] of [['roughness',-1],['metalness',2],['opacity','0.5']]){const scene=valid();scene.objects[0][key]=value;assert.equal(isValidProject(scene),false)}
 });
+test('project titles are optional for older files and validated when present',()=>{
+  const data=valid();assert.equal(isValidProject(data),true);data.title='Oficina';assert.equal(isValidProject(data),true);data.title='  ';assert.equal(isValidProject(data),false);data.title='x'.repeat(81);assert.equal(isValidProject(data),false);
+});
