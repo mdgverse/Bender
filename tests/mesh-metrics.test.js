@@ -1,0 +1,3 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';import {meshMetrics} from '../src/mesh-metrics.js';
+test('measures surface and volume of a translated, rotated box',()=>{const box=new THREE.Mesh(new THREE.BoxGeometry(1,1,1));box.scale.set(2,3,4);box.position.set(800,-9,12);box.rotation.y=Math.PI/2;const m=meshMetrics(box);assert.equal(m.triangles,12);assert.ok(m.closed);assert.ok(Math.abs(m.area-52)<1e-8);assert.ok(Math.abs(m.volume-24)<1e-8);assert.ok(Math.abs(m.size[0]-4)<1e-8)});
+test('marks open surfaces as having unreliable volume',()=>{const plane=new THREE.Mesh(new THREE.PlaneGeometry(2,3));const m=meshMetrics(plane);assert.equal(m.closed,false);assert.equal(m.area,6);assert.equal(m.triangles,2)});

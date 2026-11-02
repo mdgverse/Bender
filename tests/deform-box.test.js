@@ -1,0 +1,5 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';import {deformBox} from '../src/deform-box.js';
+const box=new THREE.BoxGeometry(1,1,1),scale=new THREE.Vector3(2,4,2);
+test('taper keeps base and reduces top in local space',()=>{const result=deformBox(box,scale,{mode:'taper',amount:.5});assert.deepEqual(result.scale,[2,4,2]);const g=result.geometry;const top=[],bottom=[];for(let i=0;i<g.length;i+=3)(g[i+1]>.4?top:bottom).push(Math.abs(g[i]));assert.equal(Math.max(...top),.25);assert.equal(Math.max(...bottom),.5)});
+test('shear offsets top while preserving height',()=>{const result=deformBox(box,scale,{mode:'shear',axis:'x',amount:2});assert.deepEqual(result.scale,[4,4,2]);assert.deepEqual(result.position,[1,0,0]);});
+test('deformations reject invalid inputs',()=>{assert.throws(()=>deformBox(box,scale,{mode:'taper',amount:0}));assert.throws(()=>deformBox(box,scale,{mode:'shear',axis:'y',amount:1}));assert.throws(()=>deformBox(box,scale,{mode:'shear',amount:Infinity}))});

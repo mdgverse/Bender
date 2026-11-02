@@ -1,0 +1,5 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';import {splitBox} from '../src/split-box.js';
+const opts={position:new THREE.Vector3(0,1,0),scale:new THREE.Vector3(4,2,2),quaternion:new THREE.Quaternion(),axis:'x',count:4,gap:0};
+test('splits equal independent pieces within original box bounds',()=>{const parts=splitBox(opts);assert.equal(parts.length,4);assert.deepEqual(parts.map(p=>p.position.x),[-1.5,-.5,.5,1.5]);assert.ok(parts.every(p=>p.scale.x===1));assert.equal(opts.scale.x,4)});
+test('accounts for gaps and rotated local axes',()=>{const q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2),parts=splitBox({...opts,quaternion:q,count:2,gap:1});assert.equal(parts[0].scale.x,1.5);assert.ok(Math.abs(parts[0].position.z-1.25)<1e-8);assert.ok(Math.abs(parts[1].position.z+1.25)<1e-8)});
+test('rejects impossible splits',()=>{for(const changes of [{count:1},{count:101},{gap:-1},{gap:2,count:4},{axis:'a'}])assert.throws(()=>splitBox({...opts,...changes}))});

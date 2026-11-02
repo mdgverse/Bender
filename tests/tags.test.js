@@ -1,0 +1,4 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {isValidTag,normalizeTag,listTags,matchesTag} from '../src/tags.js';
+const obj=tag=>({userData:{tag}});
+test('normalizes and validates tags',()=>{assert.equal(normalizeTag('  Parede  '),'Parede');assert.equal(normalizeTag('   '),'');assert.throws(()=>normalizeTag('a'.repeat(41)));assert.equal(isValidTag('A\nB'),false)});
+test('lists unique tags and filters all, untagged and matching labels',()=>{const a=[obj('Sala'),obj('Mesa'),obj('Sala'),obj('')];assert.deepEqual(listTags(a),['Mesa','Sala']);assert.equal(a.filter(o=>matchesTag(o,'all')).length,4);assert.equal(a.filter(o=>matchesTag(o,'none')).length,1);assert.equal(a.filter(o=>matchesTag(o,'tag:Sala')).length,2);assert.equal(matchesTag(a[0],'tag:sala'),false)});

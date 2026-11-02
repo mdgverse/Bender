@@ -1,0 +1,8 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';
+import {parseSTL,parseOBJ,geometryFromPositions,normalizeImportedGeometry,isValidMeshPositions} from '../src/mesh-import.js';
+import {isValidProject} from '../src/project.js';
+const stl=`solid one\n facet normal 0 0 1\n outer loop\n vertex 1 2 3\n vertex 3 2 3\n vertex 1 4 3\n endloop\n endfacet\nendsolid one`;
+test('imports STL as normalized editable geometry without changing its bounds',()=>{const bytes=new TextEncoder().encode(stl);const item=parseSTL(bytes.buffer)[0];assert.deepEqual(item.position,[2,3,3]);assert.deepEqual(item.scale,[2,2,.001]);const mesh=geometryFromPositions(item.geometry);assert.equal(mesh.getAttribute('position').count,3);mesh.dispose()});
+test('imports OBJ faces and rejects unsupported or empty geometry',()=>{const items=parseOBJ('o tri\nv 0 0 0\nv 2 0 0\nv 0 2 0\nf 1 2 3\n');assert.equal(items.length,1);assert.ok(isValidMeshPositions(items[0].geometry));assert.throws(()=>parseOBJ('v 0 0 0\n'));assert.throws(()=>parseSTL(new Uint8Array(100).fill(255).buffer))});
+test('validates imported geometry in project files',()=>{const item=parseOBJ('v 0 0 0\nv 2 0 0\nv 0 2 0\nf 1 2 3\n')[0];const data={serial:1,selected:0,objects:[{name:'modelo',type:'mesh',position:item.position,scale:item.scale,geometry:item.geometry}]};assert.equal(isValidProject(data),true);data.objects[0].geometry=[0,Infinity,0];assert.equal(isValidProject(data),false)});
+test('rejects non-finite and degenerate geometry',()=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute([1,1,1,1,1,1,1,1,1],3));assert.throws(()=>normalizeImportedGeometry(g));g.dispose()});
