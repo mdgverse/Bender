@@ -115,7 +115,7 @@ test('imports STL and rejects malformed files without changing the scene',async(
   await gotoAndStart(page,'/bender-studio.html');await page.locator('#file-menu').click();const chooser=page.waitForEvent('filechooser');await page.locator('#import-stl').click();
   const stl='solid one\n facet normal 0 0 1\n outer loop\n vertex 0 0 0\n vertex 2 0 0\n vertex 0 2 0\n endloop\n endfacet\nendsolid one';
   await (await chooser).setFiles({name:'face.stl',mimeType:'model/stl',buffer:Buffer.from(stl)});await expect(page.locator('#count')).toHaveText('2');await page.locator('#undo').click();await expect(page.locator('#count')).toHaveText('1');
-  page.once('dialog',d=>d.accept());await page.locator('#file-menu').click();const chooser2=page.waitForEvent('filechooser');await page.locator('#import-obj').click();await (await chooser2).setFiles({name:'vazio.obj',mimeType:'text/plain',buffer:Buffer.from('v 0 0 0\n')});await expect(page.locator('#count')).toHaveText('1');
+  const invalidDialog=page.waitForEvent('dialog');await page.locator('#file-menu').click();const chooser2=page.waitForEvent('filechooser');await page.locator('#import-obj').click();await (await chooser2).setFiles({name:'vazio.obj',mimeType:'text/plain',buffer:Buffer.from('v 0 0 0\n')});await (await invalidDialog).accept();await expect(page.locator('#count')).toHaveText('1');
 });
 
 test('creates independent recent projects with screenshots and unit conversion',async({page})=>{
