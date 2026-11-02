@@ -69,6 +69,8 @@ Atribua uma **Etiqueta** nas propriedades de um objeto, por exemplo “Paredes�
 
 Em **Ações dos resultados filtrados → Transformar resultados**, desloque, gire, escale, apoie no chão, centralize horizontalmente, zere rotações ou ajuste posições à grade. As transformações são individuais (não de um grupo) e incluem resultados ocultos e bloqueados. Em **Editar nomes dos resultados**, acrescente prefixo ou sufixo e substitua texto literal nos nomes. Cada ação é validada antes de alterar qualquer objeto e pode ser desfeita durante a sessão. Deslocamento e passo usam a unidade do projeto; X e Y são horizontais, Z é vertical. As transformações não apagam os parâmetros editáveis da geometria.
 
+Em **Alinhar e distribuir resultados**, alinhe os limites mínimos, os centros ou os limites máximos ao longo de um eixo global. Distribua centros igualmente entre os extremos ou iguale os espaços entre os limites mantendo os extremos (ao menos três objetos); também é possível definir um espaço fixo entre os limites (ao menos dois). A distribuição entre extremos é recusada se não houver espaço sem sobreposição. Os limites são caixas envolventes no mundo, inclusive para objetos rotacionados; a ordem é espacial, não a ordem da lista. As ações incluem resultados ocultos e bloqueados e podem ser desfeitas.
+
 Em **Ações da etiqueta filtrada**, oculte, mostre, bloqueie ou desbloqueie todos os objetos dessa etiqueta, mesmo se estiverem fora dos resultados da busca. As ações podem ser desfeitas. Etiquetas são salvas no projeto e mantidas em duplicações, cópias, repetições e divisões de caixas. Projetos antigos continuam compatíveis. As etiquetas são rótulos de organização, não grupos hierárquicos de transformação.
 
 ## Organizar projetos e cenas
