@@ -41,7 +41,7 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 
 Na lista da cena, **Filtros e ordenação** permite combinar busca e etiqueta com tipo e estado (visível, oculto, bloqueado ou desbloqueado), ordenar por nome ou tipo e limpar os filtros. A ordenação é somente visual: não altera a ordem dos objetos na cena. O contador mostra quantos objetos correspondem aos filtros.
 
-Em **Ações dos resultados filtrados**, é possível mostrar, ocultar, bloquear, desbloquear, aplicar ou remover uma etiqueta e excluir os resultados; essas ações são desfeitas pelo histórico. A exclusão pede confirmação e inclui objetos ocultos e bloqueados que correspondam aos filtros. Enquadrar visíveis ajusta a câmera para os resultados visíveis sem mudar a cena. Confira a lista e o contador antes de executar ações em lote.
+Em **Ações dos resultados filtrados**, é possível mostrar, ocultar, bloquear, desbloquear, aplicar ou remover uma etiqueta e excluir os resultados; essas ações são desfeitas pelo histórico. A exclusão pede confirmação e inclui objetos ocultos e bloqueados que correspondam aos filtros. Enquadrar visíveis ajusta a câmera para os resultados visíveis sem mudar a cena. Confira a lista e o contador antes de executar ações em lote. É possível aplicar aos resultados o material copiado do objeto selecionado, renomeá-los em sequência (com prévia e numeração configurável) ou baixar apenas eles em um JSON de projeto independente; esses recursos incluem objetos ocultos e bloqueados. Renomeação e material em lote podem ser desfeitos.
 
 ## Etiquetas de objetos
 
