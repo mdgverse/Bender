@@ -37,6 +37,12 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 - Na aba Materiais, use **Copiar material** e **Colar material** para reutilizar cor, rugosidade, metalização e opacidade em outro objeto. A cópia de material dura apenas durante a sessão do projeto.
 - Essas alterações podem ser desfeitas e refeitas; os resultados são salvos no projeto.
 
+## Repetições e ambiente
+
+- Em **Editar → Repetir objeto…**, crie cópias lineares, circulares ou em **grade 2D**. Na grade, defina linhas, colunas, eixos e espaçamentos (inclusive negativos). A prévia aparece na cena enquanto os valores são ajustados; só vira geometria ao aplicar. Uma repetição inteira pode ser desfeita de uma vez.
+- **Ambiente** agora é editado no painel lateral com prévia imediata de fundo, iluminação, posição da luz e sombras. **Cancelar** restaura o ambiente anterior; **Aplicar** salva as alterações como uma ação no histórico.
+- Na tela de projetos, **Baixar biblioteca** reúne todos os projetos e miniaturas em um JSON. **Importar biblioteca** acrescenta os projetos como cópias, sem sobrescrever os existentes. A importação valida o arquivo e tenta reverter as cópias se o armazenamento estiver cheio. O limite é 20 MB por backup e 200 projetos na biblioteca; ainda é importante guardar o arquivo fora do navegador.
+
 ## Projetos e unidades
 
 Na tela inicial, crie um projeto ou abra um dos projetos recentes pela miniatura. O botão **Projetos** retorna à biblioteca; a lixeira exclui um projeto local após confirmação. As alterações e miniaturas são salvas no armazenamento deste navegador, não na nuvem: podem ser perdidas ao limpar dados, trocar de navegador ou exceder o espaço disponível. Mantenha backups JSON. Uma cena salva pela versão anterior é migrada automaticamente e a cópia antiga é preservada.

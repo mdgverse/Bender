@@ -12,3 +12,11 @@ export function arrayOffsets({mode,count,axis='x',distance=2,radius=2}) {
     return offset;
   });
 }
+
+/** Rectangular grid relative to the original, excluding the original cell. */
+export function gridOffsets({columns,rows,axisA='x',axisB='y',spacingA=2,spacingB=2}) {
+  if(!Number.isInteger(columns)||!Number.isInteger(rows)||columns<1||rows<1||columns*rows<2||columns*rows>101)throw new Error('Use entre 2 e 101 posições na grade (incluindo o original).');
+  if(!['x','y','z'].includes(axisA)||!['x','y','z'].includes(axisB)||axisA===axisB)throw new Error('Escolha dois eixos diferentes.');
+  if(![spacingA,spacingB].every(v=>Number.isFinite(v)&&Math.abs(v)<=10000))throw new Error('Espaçamento inválido.');
+  const result=[];for(let row=0;row<rows;row++)for(let col=0;col<columns;col++){if(!row&&!col)continue;const o={x:0,y:0,z:0,angle:0};o[axisA]=col*spacingA;o[axisB]=row*spacingB;result.push(o)}return result;
+}
