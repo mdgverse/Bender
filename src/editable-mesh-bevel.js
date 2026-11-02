@@ -10,10 +10,10 @@ export function removeMeshBevel(recipe,position,scale,quaternion){if(!isValidMes
 
 /** Recompute the preceding cut while the bevel is disabled. Keep an edge only
  * when it still describes the same physical crease on the rebuilt solid. */
-export function editCutBeneathBevel(recipe,position,scale,quaternion,{mode,depth}){
+export function editCutBeneathBevel(recipe,position,scale,quaternion,{mode,depth,first=recipe.sourceCut.first,second=recipe.sourceCut.second}){
   if(!isValidMeshBevel(recipe)||recipe.enabled!==false)throw new Error('Desative o chanfro antes de editar o corte.');
   const sourceScale=new THREE.Vector3().fromArray(recipe.sourceScale),oldCut=recipe.sourceCut;
-  const rebuilt=editBoxCut(oldCut,new THREE.Vector3(),sourceScale,new THREE.Quaternion(),{mode,depth,enabled:oldCut.enabled!==false});
+  const rebuilt=editBoxCut(oldCut,new THREE.Vector3(),sourceScale,new THREE.Quaternion(),{mode,depth,first,second,enabled:oldCut.enabled!==false});
   const geometry=geometryFromPositions(rebuilt.geometry);
   try{
     const factor=sourceScale.clone().divide(new THREE.Vector3().fromArray(oldCut.resultScale));
