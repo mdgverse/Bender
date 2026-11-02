@@ -135,3 +135,20 @@ test('migrates the previous locally saved project without overwriting it',async(
   await page.addInitScript(data=>localStorage.setItem('bender-scene-v1',JSON.stringify(data)),old);await page.goto('/bender-studio.html');await expect(page.locator('#start-screen')).toBeVisible();await expect(page.getByRole('button',{name:'Abrir Projeto anterior'})).toBeVisible();
   await page.getByRole('button',{name:'Abrir Projeto anterior'}).click();await expect(page.locator('#object-name')).toHaveValue('Antigo');await expect(page.locator('#project-units')).toHaveValue('m');
 });
+
+test('aligns objects by bounds with unit-aware spacing and undo',async({page})=>{
+  await gotoAndStart(page,'/bender-studio.html');await page.locator('#project-units').selectOption('cm');
+  await page.locator('#duplicate').click();await page.locator('#align-open').click();await expect(page.locator('#align-dialog')).toBeVisible();
+  await page.locator('#align-reference').selectOption('0');await page.locator('#align-axis').selectOption('x');await page.locator('#align-mode').selectOption('after');await page.locator('#align-gap').fill('50');await page.locator('#align-form button[type="submit"]').click();
+  let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects[1].position[0]).toBeCloseTo(2.5);expect(data.objects[1].position[2]).toBeCloseTo(.5);
+  await page.locator('#undo').click();data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects[1].position[0]).toBeCloseTo(.5);
+  await page.locator('#redo').click();await page.reload();data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects[1].position[0]).toBeCloseTo(2.5);
+});
+
+test('copies materials and resizes proportionally while preserving undo',async({page})=>{
+  await gotoAndStart(page,'/bender-studio.html');await page.locator('#materials-tab').click();await page.locator('[data-material-preset="glass"]').click();await page.locator('#copy-material').click();
+  await page.locator('#modeling-tab').click();await page.locator('#add-menu').click();await page.locator('[data-add="cone"]').click();await page.locator('#materials-tab').click();await page.locator('#paste-material').click();await expect(page.locator('[data-material="opacity"]')).toHaveValue('0.35');
+  await page.locator('#modeling-tab').click();await page.locator('#proportional-scale').check();await page.locator('[data-prop="width"]').fill('4');await page.locator('[data-prop="width"]').press('Tab');
+  const data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));const object=data.objects[1];expect(object.scale[0]).toBeCloseTo(4);expect(object.scale[1]).toBeCloseTo(4);expect(object.scale[2]).toBeCloseTo(4);expect(object.opacity).toBeCloseTo(.35);
+  await page.locator('#undo').click();await expect(page.locator('[data-prop="width"]')).toHaveValue('2');
+});

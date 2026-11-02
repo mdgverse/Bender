@@ -17,6 +17,13 @@ Protótipo web de modelagem 3D com foco em desktop, publicado em [Bender Studio]
 
 Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas faces ou topologia. A ferramenta Extrudar anterior altera a altura do objeto inteiro. Os gizmos usam a convenção do Three.js: **Y é vertical e Z é profundidade**, enquanto o painel usa Z como vertical. As vistas podem ser usadas em projeção perspectiva ou ortográfica. Não há edição de vértices/faces, materiais avançados ou renderização final ainda. As dimensões são medidas no espaço local do objeto, antes da rotação.
 
+## Posicionamento e materiais
+
+- Selecione um objeto e use **Alinhar a outro…** no painel de modelagem. Escolha uma referência, eixo e alinhamento de centros ou bordas; também é possível colocar o objeto antes ou depois da referência com um espaço definido na unidade do projeto. O cálculo usa a caixa envolvente no espaço global, inclusive para objetos girados, e não faz contato entre superfícies irregulares.
+- Marque **Manter proporções** antes de editar uma dimensão para redimensionar os três eixos juntos, preservando a base vertical do objeto. A opção vale durante a sessão e pode ser desmarcada.
+- Na aba Materiais, use **Copiar material** e **Colar material** para reutilizar cor, rugosidade, metalização e opacidade em outro objeto. A cópia de material dura apenas durante a sessão do projeto.
+- Essas alterações podem ser desfeitas e refeitas; os resultados são salvos no projeto.
+
 ## Projetos e unidades
 
 Na tela inicial, crie um projeto ou abra um dos projetos recentes pela miniatura. O botão **Projetos** retorna à biblioteca; a lixeira exclui um projeto local após confirmação. As alterações e miniaturas são salvas no armazenamento deste navegador, não na nuvem: podem ser perdidas ao limpar dados, trocar de navegador ou exceder o espaço disponível. Mantenha backups JSON. Uma cena salva pela versão anterior é migrada automaticamente e a cópia antiga é preservada.
