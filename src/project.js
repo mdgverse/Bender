@@ -3,6 +3,9 @@ export function isValidProject(data) {
   if (!data || !Array.isArray(data.objects) || !Number.isSafeInteger(data.serial) || data.serial < 0 || data.objects.length > 1000) return false;
   if (data.title !== undefined && (typeof data.title !== 'string' || !data.title.trim() || data.title.length > 80)) return false;
   if (data.environment !== undefined && (!data.environment || typeof data.environment !== 'object' || typeof data.environment.background !== 'string' || !/^[0-9a-f]{6}$/i.test(data.environment.background) || !['ambient','direct'].every(k=>Number.isFinite(data.environment[k]) && data.environment[k]>=0 && data.environment[k]<=5))) return false;
+  if (data.environment?.lightPosition !== undefined && (!Array.isArray(data.environment.lightPosition) || data.environment.lightPosition.length !== 3 || !data.environment.lightPosition.every(n=>Number.isFinite(n)&&Math.abs(n)<=10000))) return false;
+  if (data.environment?.lightColor !== undefined && (typeof data.environment.lightColor !== 'string' || !/^[0-9a-f]{6}$/i.test(data.environment.lightColor))) return false;
+  if (data.environment?.showLight !== undefined && typeof data.environment.showLight !== 'boolean') return false;
   if (!Number.isInteger(data.selected) || data.selected < -1 || data.selected >= data.objects.length) return false;
   return data.objects.every(o => {
     if (!o || typeof o !== 'object' || typeof o.name !== 'string' || o.name.length > 100) return false;

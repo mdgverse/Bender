@@ -61,7 +61,18 @@ test('locks protect objects, survive reload and are undoable', async ({page}) =>
 
 test('scene environment and quick transforms persist and undo', async ({page}) => {
   await page.goto('/bender-studio.html');await page.locator('#environment-open').click();await page.locator('#environment-background').fill('#556677');await page.locator('#environment-ambient').fill('1');await page.locator('#environment-direct').fill('3');await page.locator('#environment-form button[type="submit"]').click();
-  let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.environment).toEqual({background:'556677',ambient:1,direct:3});
+  let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.environment).toMatchObject({background:'556677',ambient:1,direct:3,lightPosition:[4,4,2],lightColor:'ffffff',showLight:true});
   await page.locator('.advanced-transforms summary').click();await page.locator('[data-action="double"]').click();data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects[0].scale).toEqual([4,4,4]);
   await page.locator('#undo').click();await page.locator('#undo').click();data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.environment.background).toBe('242628');
+});
+
+
+test('point light visibly illuminates the model and its settings persist', async ({page}) => {
+  await page.goto('/bender-studio.html');await page.locator('#scene-light').click();await expect(page.locator('#light-properties')).toBeVisible();
+  await page.locator('#light-properties').click();await page.locator('#environment-ambient').fill('0');await page.locator('#environment-direct').fill('0');await page.locator('#light-marker-visible').uncheck();await page.locator('#environment-form button[type="submit"]').click();
+  await page.waitForTimeout(300);const dark=await page.locator('canvas').screenshot();
+  await page.locator('#environment-open').click();await page.locator('#environment-direct').fill('5');await page.locator('#light-x').fill('2');await page.locator('#light-y').fill('1');await page.locator('#light-z').fill('3');await page.locator('#environment-light-color').fill('#ffcc99');await page.locator('#environment-form button[type="submit"]').click();
+  await page.waitForTimeout(300);const lit=await page.locator('canvas').screenshot();expect(dark.equals(lit)).toBe(false);
+  let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.environment).toMatchObject({ambient:0,direct:5,lightPosition:[2,3,1],lightColor:'ffcc99',showLight:false});
+  await page.reload();await page.locator('#environment-open').click();await expect(page.locator('#light-z')).toHaveValue('3');await expect(page.locator('#environment-direct')).toHaveValue('5');await expect(page.locator('#light-marker-visible')).not.toBeChecked();
 });

@@ -37,3 +37,7 @@ test('validates scene lighting and object locking, retaining legacy compatibilit
   const p=valid();assert.equal(isValidProject(p),true);p.environment={background:'abcdef',ambient:2,direct:1};p.objects[0].locked=true;assert.equal(isValidProject(p),true);
   p.environment.direct=6;assert.equal(isValidProject(p),false);p.environment.direct=1;p.objects[0].locked='yes';assert.equal(isValidProject(p),false);
 });
+test('validates light position, color and marker visibility',()=>{
+  const data=valid();data.environment={background:'242628',ambient:0.6,direct:2,lightPosition:[1,2,3],lightColor:'ffddee',showLight:true};assert.equal(isValidProject(data),true);
+  data.environment.lightPosition=[Infinity,2,3];assert.equal(isValidProject(data),false);data.environment.lightPosition=[1,2,3];data.environment.lightColor='bad';assert.equal(isValidProject(data),false);data.environment.lightColor='ffffff';data.environment.showLight=1;assert.equal(isValidProject(data),false);
+});
