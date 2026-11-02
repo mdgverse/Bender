@@ -1,6 +1,6 @@
 import {matchesTag} from './tags.js';
 const fold=value=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
-function modifierMatches(o,filter){const d=o.userData,has={cut:!!(d.cut||d.meshBevel?.sourceCut),bevel:!!(d.bevel||d.meshBevel),deform:!!d.deform,stairs:!!d.stairs};return filter==='all'||(filter==='any'&&Object.values(has).some(Boolean))||(filter==='none'&&!Object.values(has).some(Boolean))||!!has[filter]}
+function modifierMatches(o,filter){const d=o.userData,has={cut:!!(d.cut||d.meshBevel?.sourceCut),bevel:!!(d.bevel||d.meshBevel),deform:!!d.deform,stairs:!!d.stairs,primitive:['sphere','cylinder','cone','torus'].includes(d.type)};return filter==='all'||(filter==='any'&&Object.values(has).some(Boolean))||(filter==='none'&&!Object.values(has).some(Boolean))||!!has[filter]}
 /** Filter and sort without modifying scene order, visibility or selection. */
 export function sceneItems(objects,{query='',searchIn='name',tag='all',type='all',state='all',modifier='all',sort='scene'}={}){
   const text=fold(query.trim());

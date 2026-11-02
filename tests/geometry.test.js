@@ -15,3 +15,6 @@ for (const type of Object.keys(PRIMITIVES)) {
   });
 }
 test('unknown primitive fails',()=>assert.throws(()=>createPrimitiveGeometry('bad')));
+
+test('curved primitives rebuild with editable shape parameters',()=>{for(const [type,p] of Object.entries({sphere:{widthSegments:12,heightSegments:8},cylinder:{segments:6,topRatio:.5},cone:{segments:8,topRatio:.25},torus:{radialSegments:8,tubularSegments:12,tubeRatio:.5}})){const old=createPrimitiveGeometry(type),g=createPrimitiveGeometry(type,p);assert.notEqual(g.attributes.position.count,old.attributes.position.count);for(const axis of ['x','y','z']){assert.ok(Math.abs(g.boundingBox.min[axis]+.5)<1e-5);assert.ok(Math.abs(g.boundingBox.max[axis]-.5)<1e-5)}old.dispose();g.dispose()}});
+test('primitive parameters reject dangerous and unexpected values',()=>{assert.throws(()=>createPrimitiveGeometry('sphere',{widthSegments:1000,heightSegments:20}));assert.throws(()=>createPrimitiveGeometry('torus',{radialSegments:16,tubularSegments:48,tubeRatio:0}));assert.throws(()=>createPrimitiveGeometry('box',{segments:8}));assert.throws(()=>createPrimitiveGeometry('cylinder',{segments:12,topRatio:1,extra:true}))});

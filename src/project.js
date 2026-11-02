@@ -1,3 +1,4 @@
+import {isValidPrimitiveParams} from './geometry.js';
 import {isValidDeformRecipe} from './editable-deform.js';
 import {isValidMeshBevel} from './editable-mesh-bevel.js';
 import {isValidCutRecipe} from './editable-cut.js';
@@ -24,6 +25,7 @@ export function isValidProject(data) {
     if (['rotation', 'rotationX', 'rotationZ'].some(key => o[key] !== undefined && !Number.isFinite(o[key]))) return false;
     if (['roughness', 'metalness', 'opacity'].some(key => o[key] !== undefined && (!Number.isFinite(o[key]) || o[key] < 0 || o[key] > 1))) return false;
     if (o.tag !== undefined && !isValidTag(o.tag)) return false;
+    if (o.primitiveParams !== undefined && !isValidPrimitiveParams(o.type,o.primitiveParams)) return false;
     if (o.deform !== undefined && (o.type!=='mesh' || o.meshBevel!==undefined || o.cut!==undefined || o.bevel!==undefined || o.stairs!==undefined || !isValidDeformRecipe(o.deform))) return false;
     if (o.meshBevel !== undefined) {if (o.type!=='mesh' || o.cut!==undefined || o.bevel!==undefined || o.stairs!==undefined || !isValidMeshBevel(o.meshBevel)) return false;totalMeshValues+=o.meshBevel.sourceGeometry.length;if(totalMeshValues>MAX_SCENE_MESH_VALUES)return false;}
     if (o.cut !== undefined && (o.type!=='mesh' || o.bevel!==undefined || o.stairs!==undefined || !isValidCutRecipe(o.cut))) return false;
