@@ -39,3 +39,56 @@ export function cutRectangle(sourceGeometry, scale, {axis,sign,face,first,second
     try{return normalizeImportedGeometry(trimmed)}finally{trimmed.dispose()}
   } finally {result?.geometry.dispose();geometry.dispose();cutterGeometry.dispose()}
 }
+
+/** Identify straight, axis-aligned convex creases shared by two perpendicular faces.
+ * Intervals are split at triangle T-junctions so cuts do not lose their edges. */
+export function findBevelEdges(geometry, scale) {
+  const pos=geometry.attributes.position,idx=geometry.index;if(!pos)return [];
+  const count=idx?idx.count:pos.count,eps=Math.max(1e-7,Math.max(scale.x,scale.y,scale.z)*1e-6), groups=new Map(), axes=['x','y','z'];
+  const vertex=i=>{const j=idx?idx.getX(i):i;return new THREE.Vector3(pos.getX(j)*scale.x,pos.getY(j)*scale.y,pos.getZ(j)*scale.z)};
+  const key=n=>Math.round(n/eps);
+  for(let i=0;i+2<count;i+=3){
+    const points=[vertex(i),vertex(i+1),vertex(i+2)],normal=new THREE.Vector3().subVectors(points[1],points[0]).cross(new THREE.Vector3().subVectors(points[2],points[0]));
+    if(normal.lengthSq()<eps*eps*eps*eps)continue;normal.normalize();
+    const normalAxis=axes.find(a=>Math.abs(normal[a])>.9999);if(!normalAxis)continue;
+    const sign=Math.sign(normal[normalAxis]),centroid=points[0].clone().add(points[1]).add(points[2]).divideScalar(3);
+    for(let j=0;j<3;j++){
+      const a=points[j],b=points[(j+1)%3],delta=new THREE.Vector3().subVectors(b,a),axis=axes.find(k=>Math.abs(delta[k])>eps&&axes.filter(q=>q!==k).every(q=>Math.abs(delta[q])<=eps));if(!axis)continue;
+      const other=axes.filter(q=>q!==axis),id=axis+':'+other.map(q=>key((a[q]+b[q])/2)).join(':');let group=groups.get(id);
+      if(!group){const point=a.clone();point[axis]=0;group={axis,point,spans:[]};groups.set(id,group)}
+      group.spans.push({min:Math.min(a[axis],b[axis]),max:Math.max(a[axis],b[axis]),normalAxis,sign,centroid});
+    }
+  }
+  const edges=[];
+  for(const {axis,point,spans} of groups.values()){
+    const breaks=[...new Set(spans.flatMap(s=>[key(s.min),key(s.max)]))].sort((a,b)=>a-b).map(n=>n*eps);let previous=null;
+    for(let i=0;i+1<breaks.length;i++){
+      const min=breaks[i],max=breaks[i+1],mid=(min+max)/2;if(max-min<=eps)continue;
+      const active=spans.filter(s=>s.min<=mid+eps&&s.max>=mid-eps);let pair=null;
+      for(const a of active){const b=active.find(n=>n.normalAxis!==a.normalAxis&&n.normalAxis!==axis);if(b){pair=[a,b];break}}
+      if(!pair){previous=null;continue}
+      const [a,b]=pair; // For convex edges, each adjoining face extends behind the other's outward normal.
+      if((b.centroid[a.normalAxis]-point[a.normalAxis])*a.sign>eps || (a.centroid[b.normalAxis]-point[b.normalAxis])*b.sign>eps){previous=null;continue}
+      const normals=[{axis:a.normalAxis,sign:a.sign},{axis:b.normalAxis,sign:b.sign}].sort((x,y)=>x.axis.localeCompare(y.axis));const signature=normals.map(n=>n.axis+n.sign).join('/');
+      if(previous&&previous.signature===signature&&Math.abs(previous.max-min)<=eps*2)previous.max=max;
+      else{previous={axis,point:point.toArray(),min,max,normals,signature};edges.push(previous)}
+    }
+  }
+  return edges.filter(e=>e.max-e.min>eps*4).slice(0,500);
+}
+
+/** Remove a bevel-shaped prism from a convex orthogonal crease of a closed mesh. */
+export function bevelMeshEdge(sourceGeometry,scale,edge,amount,segments=1){
+  if(!edge||!['x','y','z'].includes(edge.axis)||!Array.isArray(edge.normals)||edge.normals.length!==2||!Number.isInteger(segments)||segments<1||segments>12||!Number.isFinite(amount)||amount<=0||amount>=Math.min(scale.x,scale.y,scale.z)/2)throw new Error('Largura ou aresta inválida.');
+  const axes={x:['y','z'],y:['z','x'],z:['x','y']}[edge.axis], [u,v]=axes, nU=edge.normals.find(n=>n.axis===u),nV=edge.normals.find(n=>n.axis===v);if(!nU||!nV||![nU.sign,nV.sign].every(n=>n===1||n===-1))throw new Error('Aresta não suportada.');
+  const p=new THREE.Vector3().fromArray(edge.point),epsilon=Math.max(1e-5,Math.min(amount*.005,1e-3)),radius=amount+epsilon;
+  const cu=p[u]+nU.sign*epsilon,cv=p[v]+nV.sign*epsilon,centerU=cu-nU.sign*radius,centerV=cv-nV.sign*radius;
+  const points=[[cu,cv]];const start=Math.atan2(nV.sign,0),end=Math.atan2(0,nU.sign); // endpoints: (centerU, cv), (cu, centerV)
+ let delta=end-start;while(delta>Math.PI)delta-=Math.PI*2;while(delta< -Math.PI)delta+=Math.PI*2;
+  for(let i=0;i<=segments;i++){const angle=start+delta*i/segments;points.push([centerU+Math.cos(angle)*radius,centerV+Math.sin(angle)*radius])}
+  const shape=new THREE.Shape();shape.moveTo(...points[0]);for(const pt of points.slice(1))shape.lineTo(...pt);shape.closePath();
+  const cutter=new THREE.ExtrudeGeometry(shape,{depth:edge.max-edge.min+2*epsilon,bevelEnabled:false});cutter.translate(0,0,edge.min-epsilon);
+  const attr=cutter.attributes.position;for(let i=0;i<attr.count;i++){const x=attr.getX(i),y=attr.getY(i),z=attr.getZ(i),v3=new THREE.Vector3();v3[u]=x;v3[v]=y;v3[edge.axis]=z;attr.setXYZ(i,v3.x,v3.y,v3.z)}attr.needsUpdate=true;cutter.computeVertexNormals();
+  const source=sourceGeometry.clone();source.scale(scale.x,scale.y,scale.z);source.clearGroups();source.computeVertexNormals();const a=new Brush(source),b=new Brush(cutter);a.updateMatrixWorld();b.updateMatrixWorld();let result;
+  try{const evaluator=new Evaluator();evaluator.useGroups=false;evaluator.attributes=['position','normal'];result=evaluator.evaluate(a,b,SUBTRACTION);const g=result.geometry,index=g.index,pos=g.attributes.position,count=Math.min(g.drawRange.count,index?index.count:pos.count);if(!Number.isFinite(count)||count<3||count%3||count>10000)throw new Error('Chanfro complexo demais para o editor.');const values=[];for(let i=0;i<count;i++){const n=index?index.getX(i):i;values.push(pos.getX(n),pos.getY(n),pos.getZ(n))}const trimmed=new THREE.BufferGeometry();trimmed.setAttribute('position',new THREE.Float32BufferAttribute(values,3));try{return normalizeImportedGeometry(trimmed)}finally{trimmed.dispose()}}finally{result?.geometry.dispose();source.dispose();cutter.dispose()}
+}

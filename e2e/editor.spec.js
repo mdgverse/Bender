@@ -174,3 +174,11 @@ test('draws a rectangle on a face to create a through cut and undo',async({page}
 test('object numeric parameters update without closing or losing focus',async({page})=>{
   await gotoAndStart(page,'/bender-studio.html');const width=page.locator('[data-prop="width"]');await width.fill('3');await expect(width).toBeFocused();let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].scale[0]).toBe(3);await width.fill('4');await expect(width).toBeFocused();await width.press('Tab');await page.locator('#undo').click();saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(saved.objects[0].scale[0]).toBe(2);
 });
+
+test('bevel can be applied to a solid after a face cut',async({page})=>{
+  await gotoAndStart(page,'/bender-studio.html');await page.locator('[data-view="top"]').click();await page.locator('[data-tool="cut-face"]').click();
+  const box=await page.locator('#canvas canvas').boundingBox(),x=box.x+box.width/2,y=box.y+box.height/2;await page.mouse.move(x-15,y-15);await page.mouse.down();await page.mouse.move(x+15,y+15,{steps:8});await page.mouse.up();
+  await page.locator('#cut-mode').selectOption('through');await page.locator('#cut-apply').click();const cut=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(cut.objects[0].type).toBe('mesh');
+  await page.locator('#bevel-open').click();await expect(page.locator('#bevel-inline')).toBeVisible();expect(await page.locator('#bevel-edge-select option').count()).toBeGreaterThan(1);await page.locator('#bevel-edge-select').selectOption({index:1});await page.locator('#bevel-size').fill('0.1');await expect(page.locator('#bevel-apply')).toBeEnabled();await page.locator('#bevel-apply').click();
+  let result=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(result.objects[0].geometry).not.toEqual(cut.objects[0].geometry);await page.locator('#undo').click();result=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(result.objects[0].geometry).toEqual(cut.objects[0].geometry);await page.locator('#redo').click();await page.reload();result=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(result.objects[0].geometry).not.toEqual(cut.objects[0].geometry);
+});
