@@ -17,6 +17,12 @@ Protótipo web de modelagem 3D com foco em desktop, publicado em [Bender Studio]
 
 Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas faces ou topologia. A ferramenta Extrudar anterior altera a altura do objeto inteiro. Os gizmos usam a convenção do Three.js: **Y é vertical e Z é profundidade**, enquanto o painel usa Z como vertical. As vistas podem ser usadas em projeção perspectiva ou ortográfica. Não há edição de vértices/faces, materiais avançados ou renderização final ainda. As dimensões são medidas no espaço local do objeto, antes da rotação.
 
+## Chanfro e cortes em faces
+
+- Selecione uma **caixa** e escolha **Chanfro da caixa…** no painel; informe a largura na unidade do projeto. O chanfro facetado é aplicado a todas as arestas da caixa, não a arestas individuais.
+- Para fazer um entalhe ou abertura, use **Desenhar corte na face** no painel (ou o botão de corte na barra de ferramentas), clique e arraste um retângulo sobre uma face plana. Solte e escolha **Entalhe com profundidade** ou **Corte atravessando**. Girar a vista antes de desenhar pode facilitar a seleção da face. O retângulo pode ultrapassar uma borda para criar um recorte aberto.
+- Cortes funcionam em caixas e malhas fechadas com faces planas alinhadas aos eixos locais. O chanfro e o corte convertem o objeto em malha triangulada; as propriedades, materiais, desfazer/refazer, salvamento e exportação continuam disponíveis. A ferramenta antiga de empurrar/puxar continua exclusiva de caixas não convertidas. Esta ainda não é uma edição livre de faces como a do SketchUp: não há desenho arbitrário, seleção individual de arestas ou chanfro em qualquer geometria. As operações booleanas são experimentais e podem falhar em malhas abertas, complexas ou degeneradas; faça backups.
+
 ## Posicionamento e materiais
 
 - Selecione um objeto e use **Alinhar a outro…** no painel de modelagem. Escolha uma referência, eixo e alinhamento de centros ou bordas; também é possível colocar o objeto antes ou depois da referência com um espaço definido na unidade do projeto. O cálculo usa a caixa envolvente no espaço global, inclusive para objetos girados, e não faz contato entre superfícies irregulares.

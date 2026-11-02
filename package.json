@@ -11,6 +11,8 @@
   "dependencies": {
     "lucide": "^0.468.0",
     "three": "^0.170.0",
+    "three-bvh-csg": "^0.0.17",
+    "three-mesh-bvh": "^0.8.3",
     "vite": "^6.0.0"
   },
   "devDependencies": {
