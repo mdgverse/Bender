@@ -37,6 +37,12 @@ Empurrar/puxar redimensiona a caixa inteira pela face escolhida: não cria novas
 - Na aba Materiais, use **Copiar material** e **Colar material** para reutilizar cor, rugosidade, metalização e opacidade em outro objeto. A cópia de material dura apenas durante a sessão do projeto.
 - Essas alterações podem ser desfeitas e refeitas; os resultados são salvos no projeto.
 
+## Divisão, alinhamento e exportação
+
+- **Dividir caixa…** cria peças iguais ao longo de um eixo local da caixa; ajuste quantidade e espaço entre elas com prévia na cena. A rotação e o material são preservados, e a divisão inteira pode ser desfeita. Por enquanto, funciona em caixas que ainda não foram convertidas em malha.
+- **Alinhar a outro…** mostra uma prévia enquanto você ajusta eixo, bordas e distância no painel lateral; aplicar salva uma única ação e cancelar restaura a posição original.
+- Em **Arquivo**, as opções **Exportar selecionado** geram GLB, OBJ ou STL somente do objeto escolhido, sem ocultar ou modificar os demais. As opções de exportação comuns continuam exportando todos os objetos visíveis.
+
 ## Repetições e ambiente
 
 - Em **Editar → Repetir objeto…**, crie cópias lineares, circulares ou em **grade 2D**. Na grade, defina linhas, colunas, eixos e espaçamentos (inclusive negativos). A prévia aparece na cena enquanto os valores são ajustados; só vira geometria ao aplicar. Uma repetição inteira pode ser desfeita de uma vez.

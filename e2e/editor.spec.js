@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import {readFile} from 'node:fs/promises';
 
 async function gotoAndStart(page,path) {
   await page.goto(path);
@@ -138,8 +139,8 @@ test('migrates the previous locally saved project without overwriting it',async(
 
 test('aligns objects by bounds with unit-aware spacing and undo',async({page})=>{
   await gotoAndStart(page,'/bender-studio.html');await page.locator('#project-units').selectOption('cm');
-  await page.locator('#duplicate').click();await page.locator('#align-open').click();await expect(page.locator('#align-dialog')).toBeVisible();
-  await page.locator('#align-reference').selectOption('0');await page.locator('#align-axis').selectOption('x');await page.locator('#align-mode').selectOption('after');await page.locator('#align-gap').fill('50');await page.locator('#align-form button[type="submit"]').click();
+  await page.locator('#duplicate').click();const before=await page.evaluate(()=>localStorage.getItem('bender-scene-v1'));await page.locator('#align-open').click();await expect(page.locator('#align-inline')).toBeVisible();
+  await page.locator('#align-reference').selectOption('0');await page.locator('#align-axis').selectOption('x');await page.locator('#align-mode').selectOption('after');await page.locator('#align-gap').fill('50');expect(await page.evaluate(()=>localStorage.getItem('bender-scene-v1'))).toBe(before);await page.locator('#align-form button[type="submit"]').click();
   let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects[1].position[0]).toBeCloseTo(2.5);expect(data.objects[1].position[2]).toBeCloseTo(.5);
   await page.locator('#undo').click();data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects[1].position[0]).toBeCloseTo(.5);
   await page.locator('#redo').click();await page.reload();data=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(data.objects[1].position[0]).toBeCloseTo(2.5);
@@ -210,4 +211,15 @@ test('exports and restores the entire project library as copies',async({page})=>
   await gotoAndStart(page,'/bender-studio.html');await page.locator('#project-name').fill('Teste backup');await page.locator('#project-name').press('Tab');await page.locator('#open-start').click();await expect(page.locator('.recent-card')).toHaveCount(1);
   const [download]=await Promise.all([page.waitForEvent('download'),page.locator('#backup-library').click()]);expect(download.suggestedFilename()).toBe('bender-biblioteca.json');await page.locator('#library-file').setInputFiles(await download.path());await expect(page.locator('.recent-card')).toHaveCount(2);await expect(page.locator('#start-error')).toContainText('1 projeto(s) importado(s)');
   const index=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-library-v1')));expect(index[0].id).not.toBe(index[1].id);expect(index.map(x=>x.title)).toEqual(['Teste backup','Teste backup']);
+});
+
+test('divides a rotated box into equal independent pieces with live preview',async({page})=>{
+  await gotoAndStart(page,'/bender-studio.html');await page.locator('#project-units').selectOption('cm');await page.locator('[data-prop="rotation"]').fill('90');await page.locator('[data-prop="rotation"]').press('Tab');
+  const before=await page.evaluate(()=>localStorage.getItem('bender-scene-v1'));await page.locator('#split-open').click();await expect(page.locator('#split-inline')).toBeVisible();await page.locator('#split-count').fill('4');await page.locator('#split-gap').fill('10');await expect(page.locator('#split-error')).toContainText('4 peças');expect(await page.evaluate(()=>localStorage.getItem('bender-scene-v1'))).toBe(before);
+  await page.locator('#split-apply').click();await expect(page.locator('#count')).toHaveText('4');let state=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));for(const object of state.objects){expect(object.scale[0]).toBeCloseTo(.425);expect(object.rotation).toBeCloseTo(Math.PI/2)}expect(state.objects[0].position[2]).toBeCloseTo(.7875);expect(state.objects[3].position[2]).toBeCloseTo(-.7875);
+  await page.locator('#undo').click();await expect(page.locator('#count')).toHaveText('1');await page.locator('#redo').click();await page.reload();await expect(page.locator('#count')).toHaveText('4');
+});
+
+test('exports only the selected object without changing visibility',async({page})=>{
+  await gotoAndStart(page,'/bender-studio.html');await page.locator('#add-menu').click();await page.locator('[data-add="sphere"]').click();await page.locator('[data-index="0"]').click();await page.locator('#file-menu').click();const [file]=await Promise.all([page.waitForEvent('download'),page.locator('#export-selected-obj').click()]);const content=await readFile(await file.path(),'utf8');expect(file.suggestedFilename()).toBe('Cubo.obj');expect(content).toContain('o Cubo');expect(content).not.toMatch(/o Esfera/);const state=await page.evaluate(()=>JSON.parse(localStorage.getItem('bender-scene-v1')));expect(state.objects).toHaveLength(2);expect(state.objects.every(o=>o.visible)).toBe(true);
 });
